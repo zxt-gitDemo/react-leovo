@@ -18,7 +18,6 @@ import Assignments from './components/Taskstate/Assignments'
 import Examination from './components/Taskstate/Examination'
 import Feedback from './components/Taskstate/Feedback'
 import Calendar from './components/Calendar/Calendar'
-
 const { SubMenu } = Menu;
 const { Header, Content, Footer, Sider } = Layout;
 class Homepage extends Component {
