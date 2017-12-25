@@ -1,0 +1,67 @@
+{
+    "data":{
+        "candidate":"李四",
+        "address":"山东-济南",
+        "sex":"男",
+        "age":"31",
+        "phone":"18660292643",
+        "email":"18660292643@163.com",
+        "workLife":"3-5年",
+        "education":"本科",
+        "channel":"内推",
+        "referee":"张三",
+        "works":[
+            {
+                "datastart":"2016-2-2",
+                "dataend":"",
+                "now":true,
+                "cname":"山东化工股份有限公司",
+                "jobname":"人才管理",
+                "workcontent":"古里古怪楼兰古国萨芬的拉萨发链接撒发了"
+            },{
+                "datastart":"2012-2-2",
+                "dataend":"2015-5-5",
+                "now":false,
+                "cname":"山东信息股份有限公司",
+                "jobname":"测试",
+                "workcontent":"测试测试菜市场上厕所菜市场"
+            }
+        ],
+        "projects":[
+            {
+                "datastart":"2012",
+                "dataend":"",
+                "now":true,                
+                "pname":"明泉化工股份有限公司项目",
+                "role":"化工",
+                "projectcontent":"明泉股份有限公司项目 项目描述: 化工行业ERP项目 包括企业财务管理、SCM供应链管理、生产管理、HR人力资源管理、地磅及接口、物资超市接口、管理门户等    项目描述: 纺织、服装行业ERP+BOS项目 包括、SCM供应链管理、生产管理、开发牛仔布预算单、服装预算单、制造费用单、与系统接口、决算单等   "
+            },
+            {
+                "datastart":"2009-11",
+                "dataend":"20011-11",
+                "now":false,                
+                "pname":"岱银集团金卡特织造有限责任公司项目",
+                "role":"企业财务管理",
+                "projectcontent":"岱银集团金卡特织造有限责任公司项目 项目描述: 纺织、服装行业ERP+BOS项目 包括、SCM供应链管理、生产管理、开发牛仔布预算单、服装预算单、制造费用单、与系统接口、决算单等   "
+            },
+            {
+                "datastart":"2008-9",
+                "dataend":"2009-10",
+                "now":false,                
+                "pname":"百脉泉酒业有限公司HR项目",
+                "role":"人事管理",
+                "projectcontent":"百脉泉酒业有限公司HR项目 项目描述: 制造业HR项目 包括组织架构、、招聘、培训、绩效管理、薪酬管理等  项目描述: 纺织、服装行业ERP+BOS项目 包括、SCM供应链管理、生产管理、开发牛仔布预算单、服装预算单、制造费用单、与系统接口、决算单等   "
+            }
+        ],
+        "educations":[
+            {
+                "datastart":"2003",
+                "dataend":"2007",
+                "now":false,                
+                "eduname":"山东大学",
+                "education":"本科",
+                "major":"信息管理"
+            }
+        ]
+    }
+}

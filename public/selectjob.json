@@ -1,0 +1,21 @@
+{
+    "data":
+        {
+            "jobname":"软件工程师",
+            "shiringManager":"张三",
+            "scollaborator":["王五","王五五"],
+            "sworkAddress":"乌鲁木齐",
+            "sdepartment":"开发部",
+            "sworkingLife":"3-5年",
+            "seducation":"本科",
+            "paymin":"7",
+            "paymax":"8",
+            "paymonth":"13",
+            "sworkNature":"全职",
+            "recruitnum":"10",
+            "jobintroduce":"招聘来看看",
+            "recruitShow":true,
+            "recruitswitch":true
+        }
+    
+}

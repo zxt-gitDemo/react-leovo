@@ -1,0 +1,83 @@
+{
+    "data":{
+        "basic":{
+            "name":"厦门假数据信息公司",
+            "address":"厦门路大陆十大",
+            "industry":"游戏",
+            "number":"10~100人",
+            "website":"youzhao.io"
+        },
+        "workAddress":[
+            {
+                "key":"1",
+                "name":"厦门",
+                "address":"西湖区湖底公园1号"
+            }, {
+                "key": "2",
+                "name": "北京",
+                "address": "西湖区湖底公园1号"
+              }, {
+                "key": "3",
+                "name": "上海",
+                "address": "西湖区湖底公园1号"
+              }
+        ],
+        "department":[
+            {
+                "key":"1",
+                "name":"开发部"
+                
+            }, {
+                "key": "2",
+                "name": "设计部"
+                
+              }
+        ],
+        "recruitmentwebsite":"这里之后放个网址",
+        "team":[
+            {
+                "key":"1",
+                "name":"张三",
+                "email":"11111",
+                "category":"管理员",
+                "jurisdiction":true
+            },
+            {
+                "key":"2",
+                "name":"李四",
+                "email":"2222",
+                "category":"面试官",
+                "jurisdiction":false
+            }
+        ],
+        "inside":[
+            {
+                "key":"1",
+                "name":"内推人员1",
+                "email":"11111"
+            },
+            {
+                "key":"2",
+                "name":"内推人员2",
+                "email":"222222"
+            }
+        ],
+        "channel":[
+            {
+                "name":"内推",
+                "type":"默认",
+                "operation":""
+            },{
+                "name":"智联招聘",
+                "type":"默认",
+                "operation":""
+            },{
+                "name":"前程无忧(51job)",
+                "type":"默认",
+                "operation":""
+            }
+        ]
+
+
+    }
+}

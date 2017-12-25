@@ -1,0 +1,47 @@
+{
+    "data":{
+        "list":[{
+            "name":"阿萨德",
+            "sex":"女",
+            "workLife":"5-10年",
+            "companyname":"阿里妈妈集团",
+            "job":"软件工程师",
+            "education":"Mallowtown University",
+            "major":"数学与应用数学",
+            "educationlevel":"高中",
+            "applicationtime":"2017-12-14",
+            "applicationjob":"设计师",
+            "channel":"Boos直聘",
+            "interview":[{
+                "name":"产品经理",
+                "stage":"面试",
+                "time":"2017-01-02"
+            },{
+                "name":"设计师",
+                "stage":"用人部筛选",
+                "time":"2017-01-02"
+            }]
+        },{
+            "name":"康达尔",
+            "sex":"男",
+            "workLife":"1年以下",
+            "companyname":"北京千度科技有限公司",
+            "job":"软件工程师",
+            "education":"Mallowtown University",
+            "major":"数学与应用数学",
+            "educationlevel":"高中",
+            "applicationtime":"2017-12-14",
+            "applicationjob":"设计师",
+            "channel":"Boos直聘",
+            "interview":[{
+                "name":"产品经理",
+                "stage":"面试",
+                "time":"2017-01-02"
+            },{
+                "name":"设计师",
+                "stage":"用人部筛选",
+                "time":"2017-01-02"
+            }]
+        }]
+    }
+}
