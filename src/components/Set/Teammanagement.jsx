@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Layout,Icon,Input,Button,Table,Divider,Popconfirm,Form,Select} from 'antd';
+import {Layout,Input,Button,Table,Divider,Popconfirm,Form,Select} from 'antd';
 const { Header, Content, Footer, Sider } = Layout;
 const Option = Select.Option;
 

@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { Layout, Menu, Icon,Divider,Input,Select,Button,DatePicker,InputNumber } from 'antd';
-import {Router, Route,Link,NavLink,Switch} from 'react-router-dom';
-const { Header, Content, Footer, Sider } = Layout;
+import { Layout, Menu, Icon,Divider,Input,Select,Button,DatePicker } from 'antd';
+const { Content, Sider } = Layout;
 const Option = Select.Option;
 const { RangePicker } = DatePicker;
 export default class Candidatedetails extends Component {

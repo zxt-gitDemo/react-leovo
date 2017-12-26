@@ -7,7 +7,8 @@ export default class Experience extends Component {
             title:this.props.title,
             job:this.props.job,
             content:this.props.content,
-            time:this.props.time,
+            timestart:this.props.timestart,
+            timeend:this.props.timeend
         };
     }
     render(){
@@ -18,7 +19,7 @@ export default class Experience extends Component {
             <p>
                 {this.state.content}
             </p>
-            <p>{this.state.time}</p>
+            <p>{this.state.timestart}~{this.state.timeend===''?'至今':this.state.timeend}</p>
             <Divider/>
             </div>
         )

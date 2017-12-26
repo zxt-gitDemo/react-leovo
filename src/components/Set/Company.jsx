@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Layout, Menu, Breadcrumb, Icon,Badge } from 'antd';
-import {Router, Route,Link,NavLink,Switch} from 'react-router-dom';
+import { Layout, Menu } from 'antd';
+import { Route,NavLink,Switch} from 'react-router-dom';
 import Companyinformmation from './Companyinformation';
 import Teammanagement from './Teammanagement';
 import Recruitlike from './Recruitlike';

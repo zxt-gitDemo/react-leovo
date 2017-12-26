@@ -1,0 +1,61 @@
+{
+
+    "data":{
+        "interview":[
+            {
+                "jobname":"软件工程师",
+                "date":"12月25日",
+                "week":"星期二",
+                "mode":"现场面试",
+                "address":"厦门",
+                "list":[{
+                    "name":"初试",
+                    "date":"上午10:00",
+                    "time":"30分钟",
+                    "Interviewer":[
+                        {
+                            "name":"123",
+                            "isfeedback":false
+                        },
+                        {
+                            "name":"1234",
+                            "isfeedback":false
+                        }
+
+                    ]
+
+                    
+                },{
+                    "name":"复试",
+                    "date":"下午 15:00",
+                    "time":"1小时",
+                    "Interviewer":[
+                        
+                        {
+                            "name":"1234",
+                            "isfeedback":false
+                        }
+
+                    ]
+                },{
+                    "name":"终试",
+                    "date":"下午 16：00",
+                    "time":"30分钟",
+                    "Interviewer":[
+                        {
+                            "name":"123",
+                            "isfeedback":false
+                        },
+                        {
+                            "name":"1234",
+                            "isfeedback":false
+                        }
+
+                    ]
+                }]
+            }
+            
+        ]
+    }
+    
+}

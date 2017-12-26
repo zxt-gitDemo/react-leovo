@@ -1,5 +1,5 @@
 import React, { Component } from 'react';
-import {Icon,Input,Button,Table,Divider,Popconfirm,Form,Select} from 'antd';
+import {Icon,Input,Button,Table,Divider,Form,Select} from 'antd';
 import './Set.css';
 const Option = Select.Option;
 const EditableCell = ({ editable, value, onChange }) => (

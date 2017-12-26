@@ -1,8 +1,7 @@
 import React, { Component } from 'react';
-import { Layout, Menu, Icon,Divider,Select,Button,DatePicker,InputNumber } from 'antd';
-import {Router, Route,Link,NavLink,Switch} from 'react-router-dom';
+import { Layout, Menu, Icon,Divider } from 'antd';
 import Screening from './Screening'
-const { Header, Content, Footer, Sider } = Layout;
+const {  Content, Sider } = Layout;
 
 export default class Candidatedetails extends Component {
     constructor(props){

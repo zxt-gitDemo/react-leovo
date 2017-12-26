@@ -2,8 +2,11 @@ import React, { Component } from 'react';
 import {Layout,Icon,Menu,Divider,Select,Tabs,Upload,Tooltip,Tag, message,Dropdown,Radio , Button,Modal,Input,DatePicker,Checkbox } from 'antd';
 import {Router, Route,Link,NavLink} from 'react-router-dom';
 import Experience from './Experience'
+import Interviewarrange from './Interviewarrange'
 import Stepbar from './Stepbar'
-import InterviewStrat from './InterviewStrat'
+import moment from 'moment';
+import 'moment/locale/zh-cn';
+moment.locale('zh-cn');
 const { Header, Content, Footer, Sider } = Layout;
 const Option = Select.Option;
 const TabPane = Tabs.TabPane;
@@ -40,7 +43,8 @@ export default class Talentinformation extends Component {
             modal2Visible: false,
             modal3Visible: false,
             modal4Visible: false,  
-            modal5Visible: false,                
+            modal5Visible: false, 
+            stepbarVisble:'none',               
             visible: false,
             tags: [],
             inputVisible: false,
@@ -48,22 +52,50 @@ export default class Talentinformation extends Component {
             basic:{},
             work:[],
             project:[],
-            edu:[]
-          }
+            edu:[],
+            jobs:[],
+            startStepbar:'',
+            applyJobs:[],
+            selectjob:'总览',
+            interview:[],
+            newtime:new Date,
+            workAddress:[],
+            interviewarranges:[],
+            arranges:[],
+       
+        }
     }
    componentDidMount(){
-    fetch('./information/resume.json').then(res => res.json()).then(res => {
-        let basic = res.data.basic
-        let work=res.data.basic.experrience.work;
-        let project=res.data.basic.experrience.project;
-        let edu=res.data.basic.experrience.edu;
-        this.setState({basic:basic})
-        this.setState({tags:res.data.basic.label})
-        this.setState({work:work})
-        this.setState({project:project})
-        this.setState({edu:edu})        
-     
+    fetch('./candidate.json').then(res => res.json()).then(res => {
+        let basic = res.data
+        let work=res.data.works;
+        let project=res.data.projects;
+        let edu=res.data.educations;
+        this.setState({
+            basic:basic,
+            tags:res.data.label,
+            work:work,
+            project:project,
+            edu:edu,
+            applyJobs:res.data.applyJobs
+            
+        })      
     })
+    fetch('./job.json').then(res => res.json()).then(res => {
+        let { job,workAddress} = res.data 
+        this.setState({
+            jobs:job,
+            workAddress:workAddress,
+
+        })     
+    })
+    fetch('./Interviewtime.json').then(res => res.json()).then(res => {
+        let {interview} = res.data 
+        this.setState({
+            interview:interview
+        })     
+    })
+
    }
       setModal1Visible(modal1Visible) {
         this.setState({ modal1Visible });
@@ -116,7 +148,72 @@ export default class Talentinformation extends Component {
           inputValue: '',
         });
       }
-    
+      start(value){
+          
+          this.setState({
+            startStepbar:value,
+          })
+      }
+      firmjob(){
+        setTimeout(()=>{
+            this.setState({
+                stepbarVisble:'block'
+              })
+          },800)
+      }
+      viewjob(value){
+        this.setState({
+            selectjob:value,
+
+          })
+          setTimeout(()=>{
+            this.setState({
+                stepbarVisble:'block'
+              })
+          },800)
+      }
+
+      addinterview(){
+        let interviewarranges=this.state.interviewarranges;
+        interviewarranges.push(
+            {
+                name:'',
+                date:'',
+                    time:'',
+                    "Interviewer":[
+                        {
+                            "name":"",
+                            "isfeedback":false
+                        }
+                        
+
+                    ]
+
+            }
+        )
+        let arranges=this.state.arranges;
+        arranges.push(<Interviewarrange key={this.state.arranges.length} list={this.state.interviewarranges} index={this.state.arranges.length} del={(n)=>this.deletework(n)} editwork={(arrindex,value,type)=>this.editwork(arrindex,value,type)} />)
+        this.setState({arranges:arranges})
+        
+    }
+//     editwork(arrindex,value,type){
+//         let worksvalue=this.state.worksvalue;
+//         worksvalue[arrindex][type]=value;
+//         this.setState({
+//             worksvalue:worksvalue
+//         })
+//     }
+//   deletework(n){
+//     this.state.works.splice(n, 1,"");
+//     this.setState({
+//         works:this.state.works
+//     })
+//     this.state.worksvalue.splice(n, 1,"");
+//     this.setState({
+//         worksvalue:this.state.worksvalue
+//     })
+ 
+//   }
       saveInputRef = input => this.input = input
     render(){
    
@@ -132,7 +229,7 @@ export default class Talentinformation extends Component {
             <Layout style={{marginLeft:300}}>
             <Content style={{background:'white',padding:20,height:'500px'}}>
                 <div style={{position:'relative'}}>
-                    <h1 style={{display:'inline-block',marginRight:20}}>{basic.name}</h1><span>渠道：{basic.channel}</span>
+                    <h1 style={{display:'inline-block',marginRight:20}}>{basic.candidate}</h1><span>渠道：{basic.channel}</span>
                     <a style={{position:'absolute',top:15,right:0}}><Icon type="edit"/>编辑</a>
                 </div>
                 <div style={{marginBottom:20}}>
@@ -147,7 +244,7 @@ export default class Talentinformation extends Component {
                 </div>
                 <div style={{marginBottom:20}}>
                     <div style={{display:'inline-block',width:'50%'}}>
-                        <span>{basic.company}</span>
+                        <span>{basic.address}</span>
                         <Divider type="vertical" />
                         <span>{basic.sex}</span>
                         <Divider type="vertical" />
@@ -202,7 +299,7 @@ export default class Talentinformation extends Component {
                         <div style={{display:'inline-block',width:'80%'}}>
                         {
                             this.state.work.map((item,key)=>{
-                                return <Experience title={item.title} job={item.name} content={item.content} time={item.time}/>
+                                return <Experience key={key} title={item.cname} job={item.jobname} content={item.workcontent} timestart={item.datastart} timeend={item.dataend}/>
                             })
                         }
                            
@@ -216,7 +313,7 @@ export default class Talentinformation extends Component {
                         <div style={{display:'inline-block',width:'80%'}}>
                         {
                             this.state.project.map((item,key)=>{
-                                return <Experience title={item.title} job={item.name} content={item.content} time={item.time}/>
+                                return <Experience key={key} title={item.pname} job={item.role} content={item.projectcontent} timestart={item.datastart} timeend={item.dataend}/>
                             })
                         }
                         </div>
@@ -229,7 +326,7 @@ export default class Talentinformation extends Component {
                         <div style={{display:'inline-block',width:'80%'}}>
                         {
                             this.state.edu.map((item,key)=>{
-                                return <Experience title={item.title} job={item.name} content={item.content} time={item.time}/>
+                                return <Experience key={key} title={item.eduname} job={item.education} content={item.major} timestart={item.datastart} timeend={item.dataend}/>
                             })
                         }
                         </div>
@@ -250,10 +347,11 @@ export default class Talentinformation extends Component {
                     <div  style={{textAlign:'center'}}>
                     <Button type="primary" size={'large'} onClick={() => this.setModal1Visible(true)}><Icon type="plus"/>新建面试</Button>
                     </div>
-                    <p>
-                        <h2 style={{color:'#33A8DF'}}>设计师</h2>
-                        <p style={{position:'relative'}}>
-                            <span style={{color:'lightgray'}}>12月13日 星期三 现场面试</span>
+                    {this.state.interview.map((item,key)=>{
+                        return <div key={key} style={{marginTop:20}}>
+                        <h2 style={{color:'#33A8DF'}}>{item.jobname}</h2>
+                        <div style={{position:'relative'}}>
+                            <span style={{color:'lightgray'}}>{item.date} {item.week} {item.mode}</span>
                             <span style={{position:'absolute',top:0,right:0}}>
                             <a >取消面试</a>
                             &emsp;&emsp;
@@ -266,39 +364,46 @@ export default class Talentinformation extends Component {
                                     </a>
                                 </Dropdown>
                             </span>
-                        </p>
-                        <div style={{marginTop:30}}>
+                        </div>
+                        {item.list.map((item,key)=>{
+                            return <div style={{marginTop:30}} key={key}>
                             <div style={{background:'#F3F3F3',borderBottom:'1px solid #ccc',width:'100%',height:'50px',lineHeight:'50px',padding:'0 20px'}}>
-                                <Button size={'small'}>初试</Button>
-                                <span >中午 12：15</span>
-                                <span style={{float:'right'}}>时长 <Icon type="time"/>2小时30分钟</span>
+                                <Button size={'small'}>{item.name}</Button>
+                                <span >{item.date}</span>
+                                <span style={{float:'right'}}>时长 <Icon type="time"/>{item.time}</span>
                             </div>
                             <div style={{clear:'both'}}></div>
-                            <div style={{background:'#EAEAEA',width:'100%',height:'50px',lineHeight:'50px',padding:'0 20px'}}>
-                            <Icon type="user" style={{color:'black'}}/> <span>123</span> 
-                            <Button type="primary" style={{float:'right',marginTop:8}} onClick={() => this.setModal3Visible(true)}>反馈</Button>
-                            </div> 
+                            {item.Interviewer.map((item,key)=>{
+                                return <div key={key} style={{background:'#EAEAEA',width:'100%',height:'50px',lineHeight:'50px',padding:'0 20px',borderBottom:'1px solid black'}}>
+                                <Icon type="user" style={{color:'black'}}/> <span>{item.name}</span> 
+                                <Button type="primary" style={{float:'right',marginTop:8}} onClick={() => this.setModal3Visible(true)}>反馈</Button>
+                                </div> 
+                            })}
+                            
                         </div>
+                        })}
                         
-                    </p>
+                    </div>
+                    })}
+                    
                     </TabPane>
                     <TabPane tab="Offer" key="4">
                     <div  style={{textAlign:'center'}}>
                     <Button type="primary" size={'large'} onClick={() => this.setModal4Visible(true)}><Icon type="plus"/>新建Offer</Button>
                     </div>
                     <div style={{marginTop:30}}>
-                        <p>
+                        <div>
                             <span style={{marginRight:100}}>Offer职位</span><span>设计师</span>
-                        </p>
-                        <p>
+                        </div>
+                        <div>
                             <span style={{marginRight:100}}>入职日期</span><span>2017年12月19日 星期二</span>
-                        </p>
-                        <p>
+                        </div>
+                        <div>
                             <span style={{marginRight:100}}>薪资待遇</span><span>月薪 ¥ 20000 × 15 月</span>
-                        </p>
-                        <p>
+                        </div>
+                        <div>
                             <span style={{marginRight:100}}>工作地点</span><span>石河子</span>
-                        </p>
+                        </div>
                         <hr/>
                         <div style={{display:'flex',justifyContent:'space-around'}}>
                             <Button onClick={() => this.setModal5Visible(true)}>发起审批</Button>
@@ -316,12 +421,12 @@ export default class Talentinformation extends Component {
                     </TabPane>
                     <TabPane tab="历史记录" key="6">
                         <div style={{marginTop:30,padding:20,background:'#f3f3f3'}}>
-                            <p style={{display:'flex',justifyContent:'pace-between'}}>
+                            <div style={{display:'flex',justifyContent:'pace-between'}}>
                                 <span>123</span>
                                 <span>设计师</span>
-                            </p>
-                            <p>123对2017年12月13日 星期三 上午 10:00的现场面试安排进行了修改</p>
-                            <p style={{color:'lightgray'}}>2017-12-13 15:33</p>
+                            </div>
+                            <div>123对2017年12月13日 星期三 上午 10:00的现场面试安排进行了修改</div>
+                            <div style={{color:'lightgray'}}>2017-12-13 15:33</div>
                         </div>
                     </TabPane>
                 </Tabs>
@@ -337,10 +442,11 @@ export default class Talentinformation extends Component {
                     cancelText="取消"
                     width="700px"
                     >
-                    <p>
+                    <div>
                     <div style={{width:'32%',display:'inline-block',marginRight:'2%'}}>
                         <div>基本信息</div>
                         <DatePicker
+                                defaultValue={moment(this.state.newtime, 'YYYY-MM-DD')}
                                 showTime
                                 format="YYYY-MM-DD"
                                 style={{width:'100%'}}
@@ -348,67 +454,32 @@ export default class Talentinformation extends Component {
                     </div>
                     <div style={{width:'32%',display:'inline-block',marginRight:'2%'}}>
 
-                        <Select defaultValue="其他" style={{ width:'100%' }}>
-                                <Option value="jack">男</Option>
-                                <Option value="lucy">女</Option>
-                                <Option value="disabled">其他</Option>
+                        <Select defaultValue="现场面试" style={{ width:'100%' }}>
+                                <Option value="现场面试">现场面试</Option>
+                                <Option value="电话面试">电话面试</Option>
+                                <Option value="视频面试">视频面试</Option>
                         </Select>
                     </div>
+
                     <div style={{width:'32%',display:'inline-block'}}>
                         <Select defaultValue="其他" style={{ width:'100%' }}>
-                                <Option value="jack">男</Option>
-                                <Option value="lucy">女</Option>
-                                <Option value="disabled">其他</Option>
+                            {this.state.workAddress.map((item,key)=>{
+                              return  <Option value={item} key={key} >{item}</Option>  
+                            })}
                         </Select>
                     </div>
                     
-                </p>
-                <p>
+                </div>
+                <div>
                     <div>时间与面试官</div>
-                    <p>
-                    <div style={{width:'18%',display:'inline-block',marginRight:'2%'}}>
-                        <Select defaultValue="上午 10:00" style={{ width:'100%' }}>
-                                <Option value="jack">男</Option>
-                                <Option value="lucy">女</Option>
-                                <Option value="disabled">其他</Option>
-                        </Select>
-                    </div>
-                    <div style={{width:'18%',display:'inline-block',marginRight:'2%'}}>
-                        <Select defaultValue="30分钟" style={{ width:'100%' }}>
-                                <Option value="jack">男</Option>
-                                <Option value="lucy">女</Option>
-                                <Option value="disabled">其他</Option>
-                        </Select>
-                    </div>
-                    <div style={{width:'18%',display:'inline-block',marginRight:'2%'}}>
-                        <Select defaultValue="初试" style={{ width:'100%' }}>
-                                <Option value="jack">男</Option>
-                                <Option value="lucy">女</Option>
-                                <Option value="disabled">其他</Option>
-                        </Select>
-                    </div>
-                    <div style={{width:'30%',display:'inline-block',marginRight:'2%'}}>
-                    <Select
-                            showSearch
-                            optionFilterProp="children"
-                            style={{ width: '100%' }}
-                            mode="tags"
-                            filterOption={(input, option) => option.props.children.toLowerCase().indexOf(input.toLowerCase()) >= 0}
-                        >
-                            <Option value="jack">Jack</Option>
-                            <Option value="lucy">Lucy</Option>
-                            <Option value="tom">Tom</Option>
-                        </Select>
-                    </div>
-                        <div style={{width:'5%',display:'inline-block'}}>
-                            <Button><Icon type="delete"/></Button>
-                        </div>
-                    </p>
-                    <Button style={{width:"100%"}}><Icon type="plus"/>添加面试</Button>
-                </p>
-                <p>
+                {this.state.arranges.map((item,key)=>{
+                    return <div key={key}>{item}</div>
+                })}
+                    <Button style={{width:"100%",margin:'10px 0'}} onClick={this.addinterview.bind(this)} ><Icon type="plus"/>添加面试</Button>
+                </div>
+                <div>
                 <Checkbox >邮件通知候选人</Checkbox>
-                </p>
+                </div>
             </Modal>
                     <Modal
                     title="通知候选人"
@@ -448,29 +519,29 @@ export default class Talentinformation extends Component {
                     cancelText="取消"
                     width="700px"
                     >
-                    <p>
+                    <div>
                         <div>Offer职位</div>
                         <Input/>
-                    </p>
-                    <p>
+                    </div>
+                    <div>
                         <div>入职日期</div>
                         <DatePicker
                                 showTime
                                 format="YYYY-MM-DD"
                                 style={{width:'100%'}}
                         />
-                    </p>
-                    <p>
+                    </div>
+                    <div>
                         <div>薪资待遇</div>
                         <Input addonAfter={'K/月'} defaultValue="" style={{width:'48%'}}/>
                         <span> ~ </span>
                         <Input addonAfter={'K/月'} defaultValue="" style={{width:'48%'}}/>
-                    </p>
-                    <p>
+                    </div>
+                    <div>
                         <div>其他福利</div>
                         <Input/>
-                    </p>
-                    <p>
+                    </div>
+                    <div>
                         <div>工作地点</div>
                         <Select defaultValue="" style={{ width:'100%' }}>
                             <Option value="jack">Jack</Option>
@@ -478,8 +549,8 @@ export default class Talentinformation extends Component {
                             <Option value="disabled">Disabled</Option>
                             <Option value="Yiminghe">yiminghe</Option>
                             </Select>
-                    </p>
-                    <p><Checkbox >邮件通知候选人</Checkbox></p>
+                    </div>
+                    <div><Checkbox >邮件通知候选人</Checkbox></div>
                     </Modal>
                     <Modal
                     title="发起审批"
@@ -506,8 +577,34 @@ export default class Talentinformation extends Component {
                    
                    
             <Sider width={350} style={{background:'#F3F3F3',padding:10}}>
-                  {/* <Stepbar/> */}
-                  <InterviewStrat/>
+            <div>
+            <div>候选人已申请<span>{this.state.applyJobs.length}</span>个职位，当前查看的职位：</div>
+            <Select style={{ width:'100%' }} onSelect={this.viewjob.bind(this)} value={this.state.selectjob}>
+                {
+                    this.state.applyJobs.map((item,key)=>{
+                        return <Option value={item} key={key}>{item}</Option>                        
+                    })
+                }     
+            </Select>
+            <hr/>
+            <div style={{display:this.state.stepbarVisble==='block'?'none':'block'}}>
+            <div>开启新的面试流程</div>
+            <div>
+                <Select style={{ width:'80%' }} onSelect={this.start.bind(this)} value={this.state.startStepbar}>
+                {
+                    this.state.jobs.map((item,key)=>{
+                        return <Option value={item} key={key}>{item}</Option>                        
+                    })
+                }
+                </Select>
+                <Button style={{width:'20%'}} type="primary" onClick={this.firmjob.bind(this)} >确定</Button>
+            </div>
+            </div>
+            </div>
+            <div style={{display:this.state.stepbarVisble}}>
+                <Stepbar/>
+            </div>
+                  
             </Sider>
             </Layout>
         )

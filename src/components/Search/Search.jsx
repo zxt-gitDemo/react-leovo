@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Icon,Input,Button } from 'antd';
-import {BrowserRouter  as Router, Route,Link,NavLink,Switch} from 'react-router-dom';
+import { Input } from 'antd';
+import { Link,NavLink,Switch} from 'react-router-dom';
 import Talentsdetails from '../Talents/Talentsdetails'
 const Search = Input.Search;
 export default class TSearch extends Component {

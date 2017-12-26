@@ -1,10 +1,8 @@
 import React, { Component } from 'react';
-import { Layout,Select,Input,InputNumber,Checkbox,Button,DatePicker,Icon } from 'antd';
-import {BrowserRouter  as Router, Route,Link,NavLink,Switch} from 'react-router-dom';
+import { Input,Checkbox,DatePicker,Icon } from 'antd';
 import moment from 'moment';
 import 'moment/locale/zh-cn';
 moment.locale('zh-cn');
-const Option = Select.Option;
 const { TextArea } = Input;
 export default class Projectexperience extends Component {
     state = {

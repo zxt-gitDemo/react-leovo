@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
-import { Layout, Menu,Button } from 'antd';
-import { withRouter, Router, Route,Link,NavLink,Switch} from 'react-router-dom';
+import { Layout, Menu } from 'antd';
+import { Link} from 'react-router-dom';
 
 class Firstpage extends Component {
     render() {

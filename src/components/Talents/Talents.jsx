@@ -1,9 +1,8 @@
 import React, { Component } from 'react';
-import { Layout, Menu, Icon,Divider,Input,Select,Progress,Button,DatePicker,InputNumber } from 'antd';
-import {BrowserRouter  as Router, Route,Link,NavLink,Switch} from 'react-router-dom';
+import { Layout,Icon,Select,Progress } from 'antd';
 import Screening from '../Candidate/Screening'
 import Talentsdetails from './Talentsdetails'
-const { Header, Content, Footer, Sider } = Layout;
+const {  Content, Sider } = Layout;
 const Option = Select.Option;
 export default class Talents extends Component {
     constructor(props){

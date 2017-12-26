@@ -10,6 +10,9 @@
         "education":"本科",
         "channel":"内推",
         "referee":"张三",
+        "label":["精通java","熟悉adc"],
+        "job":"软件工程师",
+        "company":"企鹅网络科技有限公司",
         "works":[
             {
                 "datastart":"2016-2-2",
@@ -62,6 +65,10 @@
                 "education":"本科",
                 "major":"信息管理"
             }
+        ],
+        "applyJobs":[
+            "软件开发师",
+            "大数据开发工程师"
         ]
     }
 }
