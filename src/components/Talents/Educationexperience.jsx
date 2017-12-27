@@ -110,6 +110,7 @@ export default class Educationexperience extends Component {
        
       }
     render(){
+      console.log(this.state.eduname)
         const { startValue, endValue, endOpen } = this.state;
         let indexkey=this.props.index;
         return (

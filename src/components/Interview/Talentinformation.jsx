@@ -62,6 +62,11 @@ export default class Talentinformation extends Component {
             workAddress:[],
             interviewarranges:[],
             arranges:[],
+            date:'',
+            mode:'',
+            list:[],
+            email:false,
+            iaddress:''
        
         }
     }
@@ -97,8 +102,31 @@ export default class Talentinformation extends Component {
     })
 
    }
-      setModal1Visible(modal1Visible) {
+      setModal1Visible(modal1Visible,id) {
         this.setState({ modal1Visible });
+        this.setState({
+            interviewarranges:[],
+            arranges:[]
+        })
+        console.log(id)
+        fetch('./Interviewtime.json').then(res => res.json()).then(res => {
+            let {date,mode,list,email,iaddress} = res.data.interview[0]
+            this.setState({
+                date:date,
+                mode:mode,
+                list:list,
+                email:email,
+                iaddress:iaddress
+            },function(){
+                this.setState({interviewarranges:this.state.list},function(){
+                    let list=this.state.arranges;
+                    for( let w=0;w<this.state.interviewarranges.length;w++){
+                        list.push(<Interviewarrange key={this.state.arranges.length} list={this.state.interviewarranges[w]} index={this.state.arranges.length} del={(n)=>this.deleteinterview(n)} editinterview={(arrindex,value,type)=>this.editinterview(arrindex,value,type)} />)
+                        this.setState({arranges:list})
+                    }
+                })
+            })     
+        })
       }
       setModal2Visible(modal2Visible) {
         this.setState({ modal2Visible });
@@ -179,50 +207,48 @@ export default class Talentinformation extends Component {
             {
                 name:'',
                 date:'',
-                    time:'',
-                    "Interviewer":[
-                        {
-                            "name":"",
-                            "isfeedback":false
-                        }
-                        
-
-                    ]
+                time:'',
+                Interviewer:[],
+                Inisfeed:[]
 
             }
         )
         let arranges=this.state.arranges;
-        arranges.push(<Interviewarrange key={this.state.arranges.length} list={this.state.interviewarranges} index={this.state.arranges.length} del={(n)=>this.deletework(n)} editwork={(arrindex,value,type)=>this.editwork(arrindex,value,type)} />)
+        arranges.push(<Interviewarrange key={this.state.arranges.length} list={this.state.interviewarranges} index={this.state.arranges.length} del={(n)=>this.deleteinterview(n)} editinterview={(arrindex,value,type)=>this.editinterview(arrindex,value,type)} />)
         this.setState({arranges:arranges})
         
     }
-//     editwork(arrindex,value,type){
-//         let worksvalue=this.state.worksvalue;
-//         worksvalue[arrindex][type]=value;
-//         this.setState({
-//             worksvalue:worksvalue
-//         })
-//     }
-//   deletework(n){
-//     this.state.works.splice(n, 1,"");
-//     this.setState({
-//         works:this.state.works
-//     })
-//     this.state.worksvalue.splice(n, 1,"");
-//     this.setState({
-//         worksvalue:this.state.worksvalue
-//     })
+    editinterview(arrindex,value,type){
+        let interviewarranges=this.state.interviewarranges;    
+        if(type==="Interviewer"){
+            interviewarranges[arrindex][type]=value;
+            interviewarranges[arrindex]['Inisfeed']=[]
+            interviewarranges[arrindex][type].map((item,index)=>{
+                let obj={name:item,isfeedback:false}
+                let isfeedback= interviewarranges[arrindex]['Inisfeed']
+                isfeedback.push(obj)
+            })
+            
+        }else{
+            interviewarranges[arrindex][type]=value;
+        }
+        this.setState({
+            interviewarranges:interviewarranges
+        })
+    }
+  deleteinterview(n){
+    this.state.arranges.splice(n, 1,"");
+    this.setState({
+        arranges:this.state.arranges
+    })
+    this.state.interviewarranges.splice(n, 1,"");
+    this.setState({
+        interviewarranges:this.state.interviewarranges
+    })
  
-//   }
+  }
       saveInputRef = input => this.input = input
     render(){
-   
-        const menu = (
-            <Menu onClick={this.handleMenuClick}>
-              <Menu.Item key="1" ><div onClick={() => this.setModal1Visible(true)}>编辑</div> </Menu.Item>
-              <Menu.Item key="2"><div onClick={() => this.setModal2Visible(true)}>通知候选人</div></Menu.Item>
-            </Menu>
-          );
           const { tags, inputVisible, inputValue } = this.state;
           let basic=this.state.basic
         return (
@@ -345,7 +371,7 @@ export default class Talentinformation extends Component {
                     </TabPane>
                     <TabPane tab="面试" key="3">
                     <div  style={{textAlign:'center'}}>
-                    <Button type="primary" size={'large'} onClick={() => this.setModal1Visible(true)}><Icon type="plus"/>新建面试</Button>
+                    <Button type="primary" size={'large'} onClick={() => this.setState({modal1Visible:true,date:'',mode:'',list:[],email:'',iaddress:''})}><Icon type="plus"/>新建面试</Button>
                     </div>
                     {this.state.interview.map((item,key)=>{
                         return <div key={key} style={{marginTop:20}}>
@@ -355,7 +381,10 @@ export default class Talentinformation extends Component {
                             <span style={{position:'absolute',top:0,right:0}}>
                             <a >取消面试</a>
                             &emsp;&emsp;
-                            <Dropdown overlay={menu}
+                            <Dropdown overlay={<Menu onClick={this.handleMenuClick}>
+              <Menu.Item key="1" ><div onClick={() => this.setModal1Visible(true,item.jobname)}>编辑</div></Menu.Item>
+              <Menu.Item key="2"><div onClick={() => this.setModal2Visible(true)}>通知候选人</div></Menu.Item>
+            </Menu>}
                                     onVisibleChange={this.handleVisibleChange}
                                     visible={this.state.visible}
                                 >
@@ -375,7 +404,7 @@ export default class Talentinformation extends Component {
                             <div style={{clear:'both'}}></div>
                             {item.Interviewer.map((item,key)=>{
                                 return <div key={key} style={{background:'#EAEAEA',width:'100%',height:'50px',lineHeight:'50px',padding:'0 20px',borderBottom:'1px solid black'}}>
-                                <Icon type="user" style={{color:'black'}}/> <span>{item.name}</span> 
+                                <Icon type="user" style={{color:'black'}}/> <span>{item}</span> 
                                 <Button type="primary" style={{float:'right',marginTop:8}} onClick={() => this.setModal3Visible(true)}>反馈</Button>
                                 </div> 
                             })}
@@ -433,11 +462,11 @@ export default class Talentinformation extends Component {
                 </div>
             </Content>
             <Modal
-                    title="新建面试"
+                    title="面试"
                     style={{ top: 20}}
                     visible={this.state.modal1Visible}
                     onOk={() => this.setModal1Visible(false)}
-                    onCancel={() => this.setModal1Visible(false)}
+                    onCancel={() => this.setState({modal1Visible:false})}
                     okText="保存"
                     cancelText="取消"
                     width="700px"
@@ -446,7 +475,7 @@ export default class Talentinformation extends Component {
                     <div style={{width:'32%',display:'inline-block',marginRight:'2%'}}>
                         <div>基本信息</div>
                         <DatePicker
-                                defaultValue={moment(this.state.newtime, 'YYYY-MM-DD')}
+                                value={moment(this.state.date?this.state.date:this.state.newtime, 'MM-DD')}
                                 showTime
                                 format="YYYY-MM-DD"
                                 style={{width:'100%'}}
@@ -454,7 +483,10 @@ export default class Talentinformation extends Component {
                     </div>
                     <div style={{width:'32%',display:'inline-block',marginRight:'2%'}}>
 
-                        <Select defaultValue="现场面试" style={{ width:'100%' }}>
+                        <Select style={{ width:'100%' }}
+                        onChange={(value)=>this.setState({mode:value})}
+                        value={this.state.mode?this.state.mode:'现场面试'}
+                        >
                                 <Option value="现场面试">现场面试</Option>
                                 <Option value="电话面试">电话面试</Option>
                                 <Option value="视频面试">视频面试</Option>
@@ -478,7 +510,7 @@ export default class Talentinformation extends Component {
                     <Button style={{width:"100%",margin:'10px 0'}} onClick={this.addinterview.bind(this)} ><Icon type="plus"/>添加面试</Button>
                 </div>
                 <div>
-                <Checkbox >邮件通知候选人</Checkbox>
+                <Checkbox checked={this.state.email} >邮件通知候选人</Checkbox>
                 </div>
             </Modal>
                     <Modal
