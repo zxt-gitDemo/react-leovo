@@ -17,13 +17,13 @@ export default class Talents extends Component {
         }
     }
     componentDidMount(){
-        fetch('./job.json').then(res => res.json()).then(res => {
+        fetch('Local/job/job.json').then(res => res.json()).then(res => {
             let job=res.data.job;
             this.setState({
                 job:job
             })
         })
-        fetch('./information/talents.json').then(res => res.json()).then(res => {
+        fetch('Local/information/talents.json').then(res => res.json()).then(res => {
             let list=res.data.list
             this.setState({lists:list})
         })

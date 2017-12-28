@@ -66,12 +66,13 @@ export default class Talentinformation extends Component {
             mode:'',
             list:[],
             email:false,
-            iaddress:''
+            iaddress:'',
+            notice:'',//通知候选人
        
         }
     }
    componentDidMount(){
-    fetch('./candidate.json').then(res => res.json()).then(res => {
+    fetch('Local/import/candidate.json').then(res => res.json()).then(res => {
         let basic = res.data
         let work=res.data.works;
         let project=res.data.projects;
@@ -86,7 +87,7 @@ export default class Talentinformation extends Component {
             
         })      
     })
-    fetch('./job.json').then(res => res.json()).then(res => {
+    fetch('Local/job/job.json').then(res => res.json()).then(res => {
         let { job,workAddress} = res.data 
         this.setState({
             jobs:job,
@@ -94,7 +95,7 @@ export default class Talentinformation extends Component {
 
         })     
     })
-    fetch('./Interviewtime.json').then(res => res.json()).then(res => {
+    fetch('Local/interview/Interviewtime.json').then(res => res.json()).then(res => {
         let {interview} = res.data 
         this.setState({
             interview:interview
@@ -128,7 +129,10 @@ export default class Talentinformation extends Component {
             })     
         })
       }
-      setModal2Visible(modal2Visible) {
+      setModal2Visible(modal2Visible,id) {
+        this.setState({
+            notice:''
+        })
         this.setState({ modal2Visible });
       }
       setModal3Visible(modal3Visible) {
@@ -177,9 +181,9 @@ export default class Talentinformation extends Component {
         });
       }
       start(value){
-          
           this.setState({
             startStepbar:value,
+
           })
       }
       firmjob(){
@@ -246,6 +250,17 @@ export default class Talentinformation extends Component {
         interviewarranges:this.state.interviewarranges
     })
  
+  }
+  changeselect(type,value){
+    this.setState({
+        [type]: value,
+      });
+  }
+  inputchange(type,e){
+    this.setState({
+      [type]: e.target.value,
+    });
+
   }
       saveInputRef = input => this.input = input
     render(){
@@ -383,7 +398,7 @@ export default class Talentinformation extends Component {
                             &emsp;&emsp;
                             <Dropdown overlay={<Menu onClick={this.handleMenuClick}>
               <Menu.Item key="1" ><div onClick={() => this.setModal1Visible(true,item.jobname)}>编辑</div></Menu.Item>
-              <Menu.Item key="2"><div onClick={() => this.setModal2Visible(true)}>通知候选人</div></Menu.Item>
+              <Menu.Item key="2"><div onClick={() => this.setModal2Visible(true,item.jobname)}>通知候选人</div></Menu.Item>
             </Menu>}
                                     onVisibleChange={this.handleVisibleChange}
                                     visible={this.state.visible}
@@ -516,12 +531,12 @@ export default class Talentinformation extends Component {
                     <Modal
                     title="通知候选人"
                     visible={this.state.modal2Visible}
-                    onOk={() => this.setModal2Visible(false)}
-                    onCancel={() => this.setModal2Visible(false)}
+                    onOk={() => this.setState({modal2Visible:false})}
+                    onCancel={() => this.setState({modal2Visible:false})}
                     okText="保存"
                     cancelText="取消"
                     >
-                    <TextArea rows={4} value="aaasda"/>
+                    <TextArea rows={4} value={this.state.notice} onChange={(e)=>this.setState({notice:e.target.value})} />
                     </Modal>  
                     <Modal
                     title="面试反馈"
@@ -532,7 +547,7 @@ export default class Talentinformation extends Component {
                     cancelText="取消"
                     >
                     <div>综合评价</div>
-                    <TextArea rows={4} value=""/>
+                    <TextArea rows={4} onChange={this.inputchange.bind(this,"notice")} value={this.state.notice}  />
                     <div style={{marginTop:30}}>
                     <RadioGroup defaultValue="a" size="large">
                         <RadioButton value="a">非常合适</RadioButton>

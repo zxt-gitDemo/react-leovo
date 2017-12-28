@@ -36,7 +36,7 @@ export default class Newjob extends Component {
           }
     }
       componentDidMount(){
-        fetch('./job.json').then(res => res.json()).then(res => {
+        fetch('Local/job/job.json').then(res => res.json()).then(res => {
             let {job,hiringManager,collaborator,department,workAddress} = res.data
             this.setState({job:job})
             this.setState({hiringManager:hiringManager})
@@ -44,7 +44,7 @@ export default class Newjob extends Component {
             this.setState({department:department})
             this.setState({workAddress:workAddress})
         })
-        fetch('./data.json').then(res => res.json()).then(res => {
+        fetch('Local/common/data.json').then(res => res.json()).then(res => {
             let {workingLife,education,workNature} = res.data.basic
             this.setState({workingLife:workingLife})
             this.setState({education:education})
@@ -95,7 +95,7 @@ export default class Newjob extends Component {
     }//修改input框输入的值到状态里
       selectjob(v){
           //传入参数请求
-        fetch('./selectjob.json').then(res => res.json()).then(res => {
+        fetch('Local/job/selectjob.json').then(res => res.json()).then(res => {
             let {jobname,shiringManager,scollaborator:scollaborator,sworkAddress,sdepartment,sworkingLife,seducation} = res.data
             let {paymin,paymax,paymonth,sworkNature,recruitnum,jobintroduce,recruitShow,recruitswitch}=res.data
             this.setState({jobname:jobname})

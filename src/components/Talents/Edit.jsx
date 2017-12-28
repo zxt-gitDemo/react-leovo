@@ -37,7 +37,7 @@ const Option = Select.Option;
     }
     componentDidMount(){
       
-        fetch('./data.json').then(res => res.json()).then(res => {
+        fetch('Local/common/data.json').then(res => res.json()).then(res => {
             let { channel,education,sex,workNature,workingLife} = res.data.basic
             this.setState({sex:sex})
             this.setState({workingLife:workingLife})
@@ -45,7 +45,7 @@ const Option = Select.Option;
             this.setState({channel:channel})
          
         })
-        fetch('./job.json').then(res => res.json()).then(res => {
+        fetch('Local/job/job.json').then(res => res.json()).then(res => {
             let referee = res.data.referee
             this.setState({referee:referee})
          

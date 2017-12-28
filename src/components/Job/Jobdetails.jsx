@@ -20,13 +20,13 @@ export default class Candidatedetails extends Component {
         }
     }
     componentDidMount(){
-        fetch('./job.json').then(res => res.json()).then(res => {
+        fetch('Local/job/job.json').then(res => res.json()).then(res => {
             let { department,workAddress,hiringManager} = res.data
             this.setState({department:department})
             this.setState({workAddress:workAddress})
             this.setState({hiringManager:hiringManager})
         })
-        fetch('./jobdetails.json').then(res => res.json()).then(res => {
+        fetch('Local/job/jobdetails.json').then(res => res.json()).then(res => {
           let lists=res.data;
           this.setState({
             lists:lists

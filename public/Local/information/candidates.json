@@ -11,7 +11,16 @@
             "educationlevel":"高中",
             "applicationtime":"2017-12-14",
             "applicationjob":"设计师",
-            "channel":"Boos直聘"
+            "channel":"Boos直聘",
+            "interview":[{
+                "name":"产品经理",
+                "stage":"面试",
+                "time":"2017-01-02"
+            },{
+                "name":"设计师",
+                "stage":"用人部筛选",
+                "time":"2017-01-02"
+            }]
         },{
             "name":"康达尔",
             "sex":"男",
@@ -23,7 +32,16 @@
             "educationlevel":"高中",
             "applicationtime":"2017-12-14",
             "applicationjob":"设计师",
-            "channel":"Boos直聘"
+            "channel":"Boos直聘",
+            "interview":[{
+                "name":"产品经理",
+                "stage":"面试",
+                "time":"2017-01-02"
+            },{
+                "name":"设计师",
+                "stage":"用人部筛选",
+                "time":"2017-01-02"
+            }]
         }],
         "recruit":{
             "total":"200",
