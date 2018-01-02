@@ -7,8 +7,8 @@ const Option = Select.Option;
 const { TextArea } = Input;
 export default class Workexperience extends Component {
     state = {
-        startValue: moment(this.props.work.datastart, 'YYYY-MM'),
-        endValue: moment(this.props.work.dataend, 'YYYY-MM'),
+        startValue:this.props.work.datastart===undefined?null:moment(this.props.work.datastart, 'YYYY-MM'),
+        endValue: this.props.work.dataend===undefined?null:moment(this.props.work.dataend, 'YYYY-MM'),
         endOpen: false,
         cname:this.props.work.cname,
         jobname:this.props.work.jobname,
@@ -50,11 +50,11 @@ export default class Workexperience extends Component {
         this.props.editwork(arrindex,value,'dataend')
       }
     
-      handleStartOpenChange = (open) => {
-        if (!open) {
-          this.setState({ endOpen: true });
-        }
-      }
+      // handleStartOpenChange = (open) => {
+      //   if (!open) {
+      //     this.setState({ endOpen: true });
+      //   }
+      // }
     
       handleEndOpenChange = (open) => {
         this.setState({ endOpen: open });

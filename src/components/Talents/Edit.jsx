@@ -36,18 +36,22 @@ const Option = Select.Option;
         }
     }
     componentDidMount(){
-      
+
         fetch('Local/common/data.json').then(res => res.json()).then(res => {
-            let { channel,education,sex,workNature,workingLife} = res.data.basic
+            let { education,sex,workNature,workingLife} = res.data.basic
             this.setState({sex:sex})
             this.setState({workingLife:workingLife})
             this.setState({education:education})            
-            this.setState({channel:channel})
          
         })
         fetch('Local/job/job.json').then(res => res.json()).then(res => {
             let referee = res.data.referee
             this.setState({referee:referee})
+         
+        })
+        fetch('Local/set/company.json').then(res => res.json()).then(res => {
+            let channels = res.data.channels
+            this.setState({channel:channels})
          
         })
     }

@@ -20,18 +20,26 @@ export default class Candidatedetails extends Component {
         }
     }
     componentDidMount(){
+              
+        fetch('/xiaoniuzp/api/xnzp/job/query?page=0&size=20&sort=created,desc',{mode: 'cors',method:'post'}).then(res => res.json()).then(res => {
+            let lists=res.body.content;
+            console.log(lists)
+            this.setState({
+                lists:lists
+              })  
+        })
         fetch('Local/job/job.json').then(res => res.json()).then(res => {
             let { department,workAddress,hiringManager} = res.data
             this.setState({department:department})
             this.setState({workAddress:workAddress})
             this.setState({hiringManager:hiringManager})
         })
-        fetch('Local/job/jobdetails.json').then(res => res.json()).then(res => {
-          let lists=res.data;
-          this.setState({
-            lists:lists
-          })  
-        })
+        // fetch('Local/job/jobdetails.json').then(res => res.json()).then(res => {
+        //   let lists=res.data;
+        //   this.setState({
+        //     lists:lists
+        //   })  
+        // })
 
     }
     req(condition1,condition2){
@@ -102,7 +110,7 @@ export default class Candidatedetails extends Component {
                         <div style={{display:'flex',justifyContent:'space-between'}}>
                         <h3>筛选</h3><a onClick={this.close.bind(this)} ><Icon type="delete"/>请空筛选</a>
                         </div>
-                        <div>
+                        <div style={{marginBottom:20}}>
                             <div>职位名称<span style={{color:'red'}}>*</span></div>
                             <Input placeholder="请输入" onChange={this.inputchange.bind(this,"jobName")} 
                             value={this.state.jobName}
@@ -158,16 +166,16 @@ export default class Candidatedetails extends Component {
                            this.state.lists.map((item,key)=>{
                                return  <div key={key} style={{width:'100%',borderTop:'1px solid #f3f3f3',padding:'10px 20px 0',margin:0}}>
                                <div style={{display:'inline-block',width:'50%'}}>
-                                   <p><span>{item.name}</span> <Divider type="vertical" /><span>{item.department}</span></p>
-                                   <p>
+                                   <div style={{verticalAlign:'top',marginBottom:17}} ><span>{item.jobname}</span> <Divider type="vertical" /><span>{item.department}</span></div>
+                                   <div>
                                    <Icon type="environment-o" style={{marginRight:20}}/> 
-                                   <span style={{marginRight:20}} onClick={this.edit.bind(this,1)} ><Icon type="edit"/> 编辑</span>
+                                   <span style={{marginRight:20}} onClick={this.edit.bind(this,item.uid)} ><Icon type="edit"/> 编辑</span>
                                    <span><Icon type="share-alt"/> 分享</span>  
-                                   </p>
+                                   </div>
                                </div>
                                <div style={{display:'inline-block',width:'30%',verticalAlign:'top'}}>
                                    <p><span>候选人 {item.talent}</span> &emsp; <span>入职 {item.entry}</span></p>
-                                   <p>创建于 {item.time}</p>
+                                   <p>创建于 {item.created.split(' ')[0]}</p>
                                </div>
                                <div style={{display:'inline-block',width:'20%',verticalAlign:'top'}}>{item.founder}</div>
                            </div>

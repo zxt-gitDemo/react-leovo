@@ -6,8 +6,8 @@ moment.locale('zh-cn');
 const { TextArea } = Input;
 export default class Projectexperience extends Component {
     state = {
-      startValue: moment(this.props.project.datastart, 'YYYY-MM'),
-      endValue: moment(this.props.project.dataend, 'YYYY-MM'),
+      startValue:this.props.project.datastart===undefined?null:moment(this.props.project.datastart, 'YYYY-MM'),
+        endValue: this.props.project.dataend===undefined?null:moment(this.props.project.dataend, 'YYYY-MM'),
         endOpen: false,
         pname:this.props.project.pname,
         role:this.props.project.role,
@@ -49,11 +49,11 @@ export default class Projectexperience extends Component {
         this.props.editproject(arrindex,value,'dataend')
       }
     
-      handleStartOpenChange = (open) => {
-        if (!open) {
-          this.setState({ endOpen: true });
-        }
-      }
+      // handleStartOpenChange = (open) => {
+      //   if (!open) {
+      //     this.setState({ endOpen: true });
+      //   }
+      // }
     
       handleEndOpenChange = (open) => {
         this.setState({ endOpen: open });

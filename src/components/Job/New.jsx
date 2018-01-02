@@ -12,7 +12,6 @@ export default class Newjob extends Component {
             modal2Visible: false,
             job:[],
             hiringManager:[],
-            collaborator:[],
             department:[],
             workAddress:[],
             workingLife:[],
@@ -36,13 +35,36 @@ export default class Newjob extends Component {
           }
     }
       componentDidMount(){
-        fetch('Local/job/job.json').then(res => res.json()).then(res => {
-            let {job,hiringManager,collaborator,department,workAddress} = res.data
-            this.setState({job:job})
-            this.setState({hiringManager:hiringManager})
-            this.setState({collaborator:collaborator})
-            this.setState({department:department})
-            this.setState({workAddress:workAddress})
+        const uid=this.props.match.params.id
+        if(uid){
+            fetch('/xiaoniuzp/api/xnzp/job/'+uid,{mode: 'cors',method:'get'}).then(res => res.json()).then(res => {
+                console.log(res)
+            // let {jobname,shiringManager,scollaborator:scollaborator,sworkAddress,sdepartment,sworkingLife,seducation} = res.body
+            // let {paymin,paymax,paymonth,sworkNature,recruitnum,jobintroduce,recruitShow,recruitswitch}=res.data
+            // this.setState({jobname:jobname})
+            // this.setState({shiringManager:shiringManager})
+            // this.setState({scollaborator:scollaborator})
+            // this.setState({sworkAddress:sworkAddress})
+            // this.setState({sdepartment:sdepartment})
+            // this.setState({sworkingLife:sworkingLife})
+            // this.setState({seducation:seducation})
+            // this.setState({paymin:paymin})
+            // this.setState({paymax:paymax})
+            // this.setState({paymonth:paymonth})
+            // this.setState({sworkNature:sworkNature})
+            // this.setState({recruitnum:recruitnum})
+            // this.setState({jobintroduce:jobintroduce})
+            // this.setState({recruitShow:recruitShow})
+            // this.setState({recruitswitch:recruitswitch})
+        })
+        }
+        fetch('/xiaoniuzp/api/xnzp/public/getbas',{mode:'core',method:'get'}).then(res => res.json()).then(res => {
+           console.log(res)
+            let {person,dept,address} = res.body
+            // this.setState({job:job})
+            this.setState({hiringManager:person})
+            this.setState({department:dept})
+            this.setState({workAddress:address})
         })
         fetch('Local/common/data.json').then(res => res.json()).then(res => {
             let {workingLife,education,workNature} = res.data.basic
@@ -50,6 +72,7 @@ export default class Newjob extends Component {
             this.setState({education:education})
             this.setState({workNature:workNature})
         })
+
       }
     keep(){
         let jobname=this.state.jobname;
@@ -121,6 +144,7 @@ export default class Newjob extends Component {
           })
       }
     render(){
+        console.log(this.state.scollaborator)
         return(
             <Layout style={{background:'white',margin:'0 auto',width:'700px'}}>
                 <div style={{width:'100%',height:'60px',borderBottom:'1px solid #ccc',lineHeight:'60px'}}>
@@ -129,7 +153,7 @@ export default class Newjob extends Component {
                 <Link to="/home/jobs/newthird" style={{width:'20%',textAlign:'center',display:'inline-block',borderRight:'1px solid #ccc'}}>03面试评价表</Link>
                     <span style={{width:'20%',textAlign:'center',display:'inline-block'}}>招聘状态&emsp;<Switch checked={this.state.recruitswitch} onChange={this.changeswitch.bind(this)} checkedChildren="招聘中" unCheckedChildren="未招聘"/></span>
                 </div>
-                <div style={{padding:10,height:460,overflow:'auto'}}>
+                <div style={{padding:10,height:430,overflow:'auto'}}>
                     <Select defaultValue="从现有职位复制职位信息"
                     onSelect={this.selectjob.bind(this)} 
                     style={{ width:'100%' }}>
@@ -151,7 +175,7 @@ export default class Newjob extends Component {
                             onChange={this.changeselect.bind(this,"shiringManager")} 
                             value={this.state.shiringManager}>
                             {this.state.hiringManager.map((item,key)=>{
-                                return  <Option value={item} key={key}>{item}</Option>
+                                return  <Option value={item.uid} key={key}>{item.deptname}</Option>
                             })}
                             </Select>
                         </div>
@@ -161,8 +185,8 @@ export default class Newjob extends Component {
                                     style={{ width: '100%' }}   
                                     onChange={this.changeselect.bind(this,"scollaborator")} 
                                     value={this.state.scollaborator}>
-                                 {this.state.collaborator.map((item,key)=>{
-                                    return  <Option value={item} key={key}>{item}</Option>
+                                 {this.state.hiringManager.map((item,key)=>{
+                                    return  <Option value={item.uid} key={key}>{item.deptname}</Option>
                                 })}
                                 </Select>
                         </div>
@@ -181,7 +205,7 @@ export default class Newjob extends Component {
                         onChange={this.changeselect.bind(this,"sdepartment")} 
                         value={this.state.sdepartment}>
                         {this.state.department.map((item,key)=>{
-                            return  <Option value={item} key={key}>{item}</Option>
+                            return  <Option value={item.uid} key={key}>{item.deptname}</Option>
                         })}
                     </Select>
                 </div>
@@ -198,7 +222,7 @@ export default class Newjob extends Component {
                         onChange={this.changeselect.bind(this,"sworkAddress")} 
                         value={this.state.sworkAddress}>
                         {this.state.workAddress.map((item,key)=>{
-                            return  <Option value={item} key={key}>{item}</Option>
+                            return  <Option value={item.uid} key={key}>{item.address}</Option>
                         })}
                     </Select>
                 </div>

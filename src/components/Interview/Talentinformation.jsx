@@ -68,6 +68,7 @@ export default class Talentinformation extends Component {
             email:false,
             iaddress:'',
             notice:'',//通知候选人
+            tabkey:'1',
        
         }
     }
@@ -262,6 +263,11 @@ export default class Talentinformation extends Component {
     });
 
   }
+  clicktab(key){
+      this.setState({
+        tabkey:key
+      })
+  }
       saveInputRef = input => this.input = input
     render(){
           const { tags, inputVisible, inputValue } = this.state;
@@ -331,7 +337,7 @@ export default class Talentinformation extends Component {
       </div>
                 </div>
                 <div>
-                <Tabs defaultActiveKey="1">
+                <Tabs activeKey={this.state.tabkey} onChange={this.clicktab.bind(this)}>
                     <TabPane tab="基本信息" key="1">
                     <div>
                         <div style={{display:'inline-block',width:'20%',textAlign:'center',verticalAlign:'top'}}>

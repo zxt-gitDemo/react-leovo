@@ -13,7 +13,7 @@ const Dragger = Upload.Dragger;
         }
     }
     componentDidMount(){
-        fetch('./job.json').then(res => res.json()).then(res => {
+        fetch('Local/job/job.json').then(res => res.json()).then(res => {
             let job=res.data.job
             this.setState({
                 job:job
@@ -24,7 +24,7 @@ const Dragger = Upload.Dragger;
         this.props.changejob(value)
     }
     setJson=()=>{
-        fetch('./candidate.json').then(res => res.json()).then(res => {
+        fetch('Local/import/candidate.json').then(res => res.json()).then(res => {
             this.setState({
                 data:res.data
             },function(){

@@ -15,15 +15,15 @@
         "company":"企鹅网络科技有限公司",
         "works":[
             {
-                "datastart":"2016-2-2",
+                "datastart":"2016-2",
                 "dataend":"",
                 "now":true,
                 "cname":"山东化工股份有限公司",
                 "jobname":"人才管理",
                 "workcontent":"古里古怪楼兰古国萨芬的拉萨发链接撒发了"
             },{
-                "datastart":"2012-2-2",
-                "dataend":"2015-5-5",
+                "datastart":"2012-2",
+                "dataend":"2015-5",
                 "now":false,
                 "cname":"山东信息股份有限公司",
                 "jobname":"测试",
@@ -32,7 +32,7 @@
         ],
         "projects":[
             {
-                "datastart":"2012",
+                "datastart":"2012-02",
                 "dataend":"",
                 "now":true,                
                 "pname":"明泉化工股份有限公司项目",

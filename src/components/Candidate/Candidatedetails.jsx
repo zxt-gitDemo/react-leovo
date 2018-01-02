@@ -19,6 +19,7 @@ export default class Candidatedetails extends Component {
         }
     }
     componentDidMount(){
+        
         fetch('Local/information/candidates.json').then(res => res.json()).then(res => {
             let { list,recruit} = res.data
             let total=recruit.total;
