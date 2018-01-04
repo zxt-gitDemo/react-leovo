@@ -32,16 +32,15 @@ const props = {
         sreferee:''
       }
       componentDidMount(){
-        fetch('./data.json').then(res => res.json()).then(res => {
-            let { channel} = res.data.basic           
-            this.setState({channel:channel})
-           
-        })
-        fetch('./job.json').then(res => res.json()).then(res => {
-            let {job,referee} = res.data           
-            this.setState({job:job})
-            this.setState({referee:referee})
-        })
+        // fetch('/Local/common/data.json').then(res => res.json()).then(res => {
+        //     let { channel} = res.data.basic           
+        //     this.setState({channel:channel})
+        // })
+        // fetch('./job.json').then(res => res.json()).then(res => {
+        //     let {job,referee} = res.data           
+        //     this.setState({job:job})
+        //     this.setState({referee:referee})
+        // })
       }
       setModalVisible(modalVisible) {
         this.setState({ modalVisible });

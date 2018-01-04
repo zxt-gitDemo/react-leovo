@@ -62,7 +62,7 @@ class Homepage extends Component {
                     
                   </Switch>
                   </Content>
-                  <Footer style={{ textAlign: 'center' }}>
+                  <Footer style={{ textAlign: 'center',position:'fixed',bottom:0,zIndex:20,width:'100%'}}>
                             Ant Design ©2016 Created by Ant UED
                   </Footer>
                 </Layout>

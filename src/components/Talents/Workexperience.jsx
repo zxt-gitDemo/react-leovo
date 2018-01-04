@@ -13,7 +13,7 @@ export default class Workexperience extends Component {
         cname:this.props.work.cname,
         jobname:this.props.work.jobname,
         workcontent:this.props.work.workcontent,
-        checked:this.props.work.now
+        checked:this.props.work.isnow
       };
       disabledStartDate = (startValue) => {
         const endValue = this.state.endValue;
@@ -32,22 +32,29 @@ export default class Workexperience extends Component {
       }
     
       onChange = (field, value) => {
+       
         this.setState({
           [field]: value,
         });
-        console.log(value)
       }
     
       onStartChange = (value) => {
+        let time=moment(value._d).format('YYYY-MM')
         this.onChange('startValue', value);
         let arrindex=this.keyid.getAttribute('data-key')
-        this.props.editwork(arrindex,value,'datastart')
+        this.props.editwork(arrindex,time,'datastart')
       }
     
       onEndChange = (value) => {
+        let time=""
+        if(value===undefined){
+          
+        }else{
+          time=moment(value._d).format('YYYY-MM')
+        }
         this.onChange('endValue', value);
         let arrindex=this.keyid.getAttribute('data-key')
-        this.props.editwork(arrindex,value,'dataend')
+        this.props.editwork(arrindex,time,'dataend')
       }
     
       // handleStartOpenChange = (open) => {

@@ -10,9 +10,9 @@ export default class Projectexperience extends Component {
         endValue: this.props.project.dataend===undefined?null:moment(this.props.project.dataend, 'YYYY-MM'),
         endOpen: false,
         pname:this.props.project.pname,
-        role:this.props.project.role,
+        crole:this.props.project.crole,
         projectcontent:this.props.project.projectcontent,
-        checked:this.props.project.now
+        checked:this.props.project.isnow
       };
     
       disabledStartDate = (startValue) => {
@@ -38,15 +38,22 @@ export default class Projectexperience extends Component {
       }
     
       onStartChange = (value) => {
+        let time=moment(value._d).format('YYYY-MM')
         this.onChange('startValue', value);
         let arrindex=this.keyid.getAttribute('data-key')
-        this.props.editproject(arrindex,value,'datastart')
+        this.props.editproject(arrindex,time,'datastart')
       }
     
       onEndChange = (value) => {
+        let time=""
+        if(value===undefined){
+          
+        }else{
+          time=moment(value._d).format('YYYY-MM')
+        }
         this.onChange('endValue', value);
         let arrindex=this.keyid.getAttribute('data-key')
-        this.props.editproject(arrindex,value,'dataend')
+        this.props.editproject(arrindex,time,'dataend')
       }
     
       // handleStartOpenChange = (open) => {
@@ -133,7 +140,7 @@ export default class Projectexperience extends Component {
                       </div>
                   <div style={{width:'49%',display:'inline-block'}}>
                           <div>角色</div>
-                          <Input onChange={this.childchange.bind(this,'role')} value={this.state.role}/>
+                          <Input onChange={this.childchange.bind(this,'crole')} value={this.state.crole}/>
                       </div>
               </div>
               <div style={{marginBottom:20}}>

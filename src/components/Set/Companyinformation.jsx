@@ -89,7 +89,7 @@ export default class Company extends Component {
 
       }
       componentDidMount(){
-        fetch('./data.json').then(res => res.json()).then(res => {
+        fetch('Local/common/data.json').then(res => res.json()).then(res => {
           let {industry,number}=res.data.basic;
           this.setState({industry:industry})
           this.setState({number:number })

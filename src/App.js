@@ -1,7 +1,7 @@
 import './App.css';
 import React, { Component } from 'react';
 import { Layout, Menu, Breadcrumb, Icon,Badge,Divider } from 'antd';
-import { HashRouter as Router, Route,Link,NavLink,Switch} from 'react-router-dom';
+import { BrowserRouter as Router, Route,Link,NavLink,Switch} from 'react-router-dom';
 import Login from './Login'
 import First from './Firstpage'
 import Home from './Homepage'

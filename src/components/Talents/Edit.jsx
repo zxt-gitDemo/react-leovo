@@ -1,9 +1,13 @@
 import React, { Component } from 'react';
 import { Layout,Select,Input,Button,Modal,message} from 'antd';
 import {withRouter} from 'react-router-dom';
-import Workexpenience from './Workexperience'
-import Projectexpenience from './Projectexperience'
-import Educationexperience from './Educationexperience'
+import Workexpenience from './Workexperience';
+import Projectexpenience from './Projectexperience';
+import Educationexperience from './Educationexperience';
+import Cookies from 'js-cookie';
+import moment from 'moment';
+import 'moment/locale/zh-cn';
+moment.locale('zh-cn');
 const { Header, Content, Footer, Sider } = Layout;
 const Option = Select.Option;
  class Edit extends Component {
@@ -32,33 +36,39 @@ const Option = Select.Option;
             sworkLife:'',
             seducation:'',
             schannel:'内推',
-            sreferee:''
+            sreferee:'',
+            uid:'',
+            created:'',
+            updated:'',
+            updstamp:''
         }
     }
     componentDidMount(){
 
-        fetch('Local/common/data.json').then(res => res.json()).then(res => {
+        fetch('/Local/common/data.json').then(res => res.json()).then(res => {
             let { education,sex,workNature,workingLife} = res.data.basic
             this.setState({sex:sex})
             this.setState({workingLife:workingLife})
             this.setState({education:education})            
          
         })
-        fetch('Local/job/job.json').then(res => res.json()).then(res => {
-            let referee = res.data.referee
-            this.setState({referee:referee})
+        // fetch('Local/job/job.json').then(res => res.json()).then(res => {
+        //     let referee = res.data.referee
+        //     this.setState({referee:referee})
          
-        })
-        fetch('Local/set/company.json').then(res => res.json()).then(res => {
-            let channels = res.data.channels
-            this.setState({channel:channels})
+        // })
+        // fetch('Local/set/company.json').then(res => res.json()).then(res => {
+        //     let channels = res.data.channels
+        //     this.setState({channel:channels})
          
-        })
+        // })
     }
     componentWillReceiveProps(nextProps){
        let objnull = Object.keys(nextProps.data);
+       
        if(objnull.length == 0){
        }else{
+           console.log(nextProps.data)
         let { candidate,address,sex,age,phone,email,workLife,education,channel,referee,works:ws,projects:ps,educations:es} = nextProps.data
         this.setState({sname:candidate})
         this.setState({saddress:address})
@@ -105,43 +115,67 @@ const Option = Select.Option;
         this.setState({ modalVisible });
       } //显示添加推荐人弹窗
       newtalent(){
-        
+        let created=this.state.created;
+        let updated=this.state.updated;
+        let updstamp=this.state.updstamp;
+            if(this.state.uid===''){
+                let newtime=moment(new Date).format('YYYY-MM-DD HH:mm:ss')
+                    created=newtime;
+                    updated=newtime;
+                    updstamp=newtime;
+            }
           let [name,address,sex,age,phone,email,workLife,education,channel,referee]=[this.state.sname,this.state.saddress,this.state.ssex,this.state.sage,this.state.sphone,this.state.semail,this.state.sworkLife,this.state.seducation,this.state.schannel,this.state.sreferee];
           let works=this.state.worksvalue;
           let projects=this.state.projectsvalue;
           let educations=this.state.educationsvalue;
-          let job=this.props.job
+          let job=[];
+          if(this.props.job==""){
+
+          }else{
+            job.push({jobuid:this.props.job})
+          }
+          
           this.trim(works)
           this.trim(projects)
           this.trim(educations)
-          
-          if(name==""){
+          let obj={
+            abilityname:name,
+            address:address,
+            sex:sex,
+            age:age,
+            phone:phone,
+            email:email,
+            workLife:workLife,
+            education:education,
+            channel:channel,
+            referee:referee,
+            personworks:works,
+            personprojects:projects,
+            personeducations:educations,
+            personapplyJobs:job
+          }
+          console.log(obj)
+          if(name===""){
             message.warning("姓名不能为空", [1])
           }else{
-            if(channel!="内推"){
-                referee=''
-            }else{
-                if(referee==""){
-                    message.warning("推荐人不能为空", [1])
-                    return 
-                }          
-            }
-            this.props.history.push('/home/talents/information')
+            // if(channel!="内推"){
+            //     referee=''
+            // }else{
+            //     if(referee==""){
+            //         message.warning("推荐人不能为空", [1])
+            //         return 
+            //     }          
+            // }
+            fetch('http://10.125.4.32:8080/xiaoniuzp/api/xnzp/abilityPerson',{mode:'cors',method:'post',
+            headers: {'Content-Type': 'application/json;charset=UTF-8'},
+            body:JSON.stringify(obj),
+            }).then(res => res.json()).then(res => {
+                // this.props.history.push('/home/talents/information')
+            }).catch(()=>{
+                message.error("保存失败", [1])
+            })  
+            
           }
-            // console.log(name)
-            // console.log(address)
-            // console.log(sex)
-            // console.log(age)
-            // console.log(phone)
-            // console.log(email)
-            // console.log(workLife)
-            // console.log(education)
-            // console.log(channel)
-            // console.log(referee)
-            // console.log(job)
-            // console.log(works)
-            // console.log(projects)
-            // console.log(educations)
             
          
       }//保存新建候选人
@@ -174,7 +208,7 @@ const Option = Select.Option;
                 {
                     datastart:'',
                     dataend:'',
-                    now:false,
+                    isnow:false,
                     cname:'',
                     jobname:'',
                     workcontent:''
@@ -209,9 +243,9 @@ const Option = Select.Option;
             {
                 datastart:'',
                 dataend:'',
-                now:false,
+                isnow:false,
                 pname:'',
-                role:'',
+                crole:'',
                 projectcontent:''
             }
         )
@@ -244,7 +278,7 @@ const Option = Select.Option;
             {
                 datastart:'',
                 dataend:'',
-                now:false,
+                isnow:false,
                 eduname:'',
                 education:'',
                 major:''

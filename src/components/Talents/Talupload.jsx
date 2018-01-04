@@ -13,18 +13,16 @@ const Dragger = Upload.Dragger;
         }
     }
     componentDidMount(){
-        fetch('Local/job/job.json').then(res => res.json()).then(res => {
-            let job=res.data.job
-            this.setState({
-                job:job
-            })
-        })     
+        fetch('http://10.125.4.32:8080/xiaoniuzp/api/xnzp/public/getbas',{mode:'cors',method:'get'}).then(res => res.json()).then(res => {
+            let {job} = res.body
+            this.setState({job:job})
+        })    
     }
     onselect(value){
         this.props.changejob(value)
     }
     setJson=()=>{
-        fetch('Local/import/candidate.json').then(res => res.json()).then(res => {
+        fetch('/Local/import/candidate.json').then(res => res.json()).then(res => {
             this.setState({
                 data:res.data
             },function(){
@@ -41,7 +39,7 @@ const Dragger = Upload.Dragger;
         const up = {
             name: 'file',
             multiple: true,
-            action: '/#',
+            action: 'htttp://10.125.4.32:8080/xiaoniuzp/api/base/attachment/upload?mothod=post',
             onChange(info) {
               const status = info.file.status;
               if (status !== 'uploading') {
@@ -50,6 +48,7 @@ const Dragger = Upload.Dragger;
               if (status === 'done') {
                 message.success(`${info.file.name} file uploaded successfully.`);
               } else if (status === 'error') {
+                console.log(info)
                 message.error(`${info.file.name} file upload failed.`);
                 return self.setJson()
               
@@ -76,7 +75,7 @@ const Dragger = Upload.Dragger;
                     </div>
                     <Select defaultValue="请选择" style={{ width:'100%' }} onSelect={this.onselect.bind(this)}>
                             {this.state.job.map((item,key)=>{
-                                return <Option value={item} key={key} >{item}</Option>                            
+                                return <Option value={item.uid} key={key} >{item.jobname}</Option>                            
                             })}
                     </Select>
                 </div>

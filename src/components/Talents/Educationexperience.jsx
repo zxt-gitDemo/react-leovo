@@ -21,7 +21,7 @@ export default class Educationexperience extends Component {
           };
     }
       componentDidMount(){
-        fetch('Local/common/data.json').then(res => res.json()).then(res => {
+        fetch('/Local/common/data.json').then(res => res.json()).then(res => {
           let { channel,education,sex,workNature,workingLife } = res.data.basic
 
             this.setState({educations:education})            
@@ -46,22 +46,28 @@ export default class Educationexperience extends Component {
       }
     
       onChange = (field, value) => {
-        value=moment(value._d).format('YYYY-MM-DD')
         this.setState({
           [field]: value,
         });
       }
     
       onStartChange = (value) => {
+        let time=moment(value._d).format('YYYY-MM')
         this.onChange('startValue', value);
         let arrindex=this.keyid.getAttribute('data-key')
-        this.props.editeducations(arrindex,value,'datastart')
+        this.props.editeducations(arrindex,time,'datastart')
       }
     
       onEndChange = (value) => {
+        let time=""
+        if(value===undefined){
+          
+        }else{
+          time=moment(value._d).format('YYYY-MM')
+        }
         this.onChange('endValue', value);
         let arrindex=this.keyid.getAttribute('data-key')
-        this.props.editeducations(arrindex,value,'dataend')
+        this.props.editeducations(arrindex,time,'dataend')
       }
     
       // handleStartOpenChange = (open) => {
@@ -103,7 +109,6 @@ export default class Educationexperience extends Component {
         if(this.state.checked==false){
           let arrindex=this.keyid.getAttribute('data-key')
           let value=new Date()
-          console.log(value)
           this.props.editeducations(arrindex,value,'dataend')
         }else{
           this.onEndChange();
@@ -111,7 +116,6 @@ export default class Educationexperience extends Component {
        
       }
     render(){
-      console.log(this)
         const { startValue, endValue, endOpen } = this.state;
         let indexkey=this.props.index;
         return (

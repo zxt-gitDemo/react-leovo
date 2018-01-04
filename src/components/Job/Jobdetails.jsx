@@ -21,14 +21,14 @@ export default class Candidatedetails extends Component {
     }
     componentDidMount(){
               
-        fetch('/xiaoniuzp/api/xnzp/job/query?page=0&size=20&sort=created,desc',{mode: 'cors',method:'post'}).then(res => res.json()).then(res => {
+        fetch('http://10.125.4.32:8080/xiaoniuzp/api/xnzp/job/query?page=0&size=20&sort=created,desc',{mode: 'cors',method:'post'}).then(res => res.json()).then(res => {
             let lists=res.body.content;
             console.log(lists)
             this.setState({
                 lists:lists
               })  
         })
-        fetch('Local/job/job.json').then(res => res.json()).then(res => {
+        fetch('/Local/job/job.json').then(res => res.json()).then(res => {
             let { department,workAddress,hiringManager} = res.data
             this.setState({department:department})
             this.setState({workAddress:workAddress})

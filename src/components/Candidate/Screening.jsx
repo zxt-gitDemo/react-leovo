@@ -27,7 +27,7 @@ export default class Screening extends Component {
         }
     }
     componentDidMount(){
-        fetch('Local/common/data.json').then(res => res.json()).then(res => {
+        fetch('/Local/common/data.json').then(res => res.json()).then(res => {
             let { channel,education,workingLife,sex} = res.data.basic
             let educations=education.map(v => ({ value: v, isActive: false }))
             let workingLifes=workingLife.map(v => ({ value: v, isActive: false }))
