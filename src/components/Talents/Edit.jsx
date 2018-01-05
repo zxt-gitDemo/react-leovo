@@ -35,42 +35,54 @@ const Option = Select.Option;
             semail:'',
             sworkLife:'',
             seducation:'',
-            schannel:'内推',
+            schannel:'1e8accab6896417799db84bd42d01d06',
             sreferee:'',
             uid:'',
             created:'',
             updated:'',
-            updstamp:''
+            updstamp:'',
+            deleteshow:false
         }
     }
     componentDidMount(){
-
+       let uid=this.props.match.params.id;
+       if(uid){
+        fetch('http://10.125.4.32:8080/xiaoniuzp/api/xnzp/abilityPerson/'+uid,{mode: 'cors',method:'get'}).then(res => res.json()).then(res => {
+            this.againReq(res.body)  
+            this.setState({
+                uid:res.body.uid,
+                deleteshow:true
+            })
+            })
+        }
         fetch('/Local/common/data.json').then(res => res.json()).then(res => {
             let { education,sex,workNature,workingLife} = res.data.basic
             this.setState({sex:sex})
             this.setState({workingLife:workingLife})
             this.setState({education:education})            
-         
         })
-        // fetch('Local/job/job.json').then(res => res.json()).then(res => {
-        //     let referee = res.data.referee
-        //     this.setState({referee:referee})
-         
-        // })
-        // fetch('Local/set/company.json').then(res => res.json()).then(res => {
-        //     let channels = res.data.channels
-        //     this.setState({channel:channels})
-         
-        // })
+        fetch('http://10.125.4.32:8080/xiaoniuzp/api/xnzp/public/getbas',{mode:'cors',method:'get'}).then(res => res.json()).then(res => {
+        let {job,channel,referee} = res.body
+            this.setState({job:job,
+                channel:channel,
+                referee:referee
+            })
+        })    
     }
     componentWillReceiveProps(nextProps){
        let objnull = Object.keys(nextProps.data);
        
        if(objnull.length == 0){
        }else{
-           console.log(nextProps.data)
-        let { candidate,address,sex,age,phone,email,workLife,education,channel,referee,works:ws,projects:ps,educations:es} = nextProps.data
-        this.setState({sname:candidate})
+         console.log(nextProps.data)
+        this.againReq(nextProps.data)
+       }
+        
+    }
+    againReq(data){
+        let { created,updated,updstamp,abilityname,address,sex,age,phone,email,workLife,education,channel,referee,personworks:ws,personprojects:ps,personeducations:es} = data
+        console.log(data)
+        this.setState({sname:abilityname})
         this.setState({saddress:address})
         this.setState({ssex:sex})
         this.setState({sage:age})
@@ -80,6 +92,9 @@ const Option = Select.Option;
         this.setState({seducation:education})
         this.setState({schannel:channel})
         this.setState({sreferee:referee})
+        this.setState({created:created})
+        this.setState({updated:updated})
+        this.setState({updstamp:updstamp})
         this.setState({worksvalue:ws},function(){
             let worklist=this.state.works;
             for( let w=0;w<this.state.worksvalue.length;w++){
@@ -102,17 +117,38 @@ const Option = Select.Option;
             }
         })  
 
-        if(this.state.schannel!="内推"){
+        if(this.state.schannel!="1e8accab6896417799db84bd42d01d06"){
             this.setState({refereeVisible:'none'})
         }else{
             this.setState({refereeVisible:'inline-block'})
         }  
-       }
-        
     }
       setModalVisible(modalVisible) {
-          alert('点击保存');
-        this.setState({ modalVisible });
+        let name=this.rname.input.value
+        let email=this.remail.input.value
+        if(name===""||email===""){
+            message.warning("不能为空", [1])            
+        }else{
+        fetch('http://10.125.4.32:8080/xiaoniuzp/api/xnzp/referee',{mode:'cors',method:'post',
+                    headers: {'Content-Type': 'application/json;charset=UTF-8'},
+                    body:JSON.stringify({
+                        "refereename":name,
+                        "refereeEMail":email
+                    }),
+                    }).then(res => res.json()).then(res => {
+                    message.success("保存成功", [1])
+                    fetch('http://10.125.4.32:8080/xiaoniuzp/api/xnzp/public/getbas',{mode:'cors',method:'get'}).then(res => res.json()).then(res => {
+                        let {referee} = res.body
+                        this.setState({referee:referee})
+                    })   
+                    this.setState({ modalVisible });
+
+                }).catch(()=>{
+                    message.error("保存失败", [1])
+        })   
+        }
+        
+       
       } //显示添加推荐人弹窗
       newtalent(){
         let created=this.state.created;
@@ -139,6 +175,7 @@ const Option = Select.Option;
           this.trim(projects)
           this.trim(educations)
           let obj={
+            uid:this.state.uid,
             abilityname:name,
             address:address,
             sex:sex,
@@ -147,30 +184,36 @@ const Option = Select.Option;
             email:email,
             workLife:workLife,
             education:education,
-            channel:channel,
-            referee:referee,
+            channeluid:channel,
+            refereeuid:referee,
             personworks:works,
             personprojects:projects,
             personeducations:educations,
-            personapplyJobs:job
+            personapplyJobs:job,
+            created:created,
+            updated:updated,
+            updstamp:updstamp
           }
           console.log(obj)
           if(name===""){
             message.warning("姓名不能为空", [1])
           }else{
-            // if(channel!="内推"){
-            //     referee=''
-            // }else{
-            //     if(referee==""){
-            //         message.warning("推荐人不能为空", [1])
-            //         return 
-            //     }          
-            // }
+            if(channel!="1e8accab6896417799db84bd42d01d06"){
+                referee=''
+            }else{
+                if(referee==""){
+                    message.warning("推荐人不能为空", [1])
+                    return 
+                }          
+            }
             fetch('http://10.125.4.32:8080/xiaoniuzp/api/xnzp/abilityPerson',{mode:'cors',method:'post',
             headers: {'Content-Type': 'application/json;charset=UTF-8'},
             body:JSON.stringify(obj),
             }).then(res => res.json()).then(res => {
-                // this.props.history.push('/home/talents/information')
+                message.success("保存成功",[0.5])
+                setTimeout(()=>{
+                    this.props.history.push('/home/talents/information')
+                },500)
             }).catch(()=>{
                 message.error("保存失败", [1])
             })  
@@ -196,7 +239,7 @@ const Option = Select.Option;
         this.setState({
             [type]: v,
           });
-        if(v!="内推"){
+        if(v!="1e8accab6896417799db84bd42d01d06"){
             this.setState({refereeVisible:'none'})
         }else{
             this.setState({refereeVisible:'inline-block'})
@@ -208,7 +251,7 @@ const Option = Select.Option;
                 {
                     datastart:'',
                     dataend:'',
-                    isnow:false,
+                    isnow:'n',
                     cname:'',
                     jobname:'',
                     workcontent:''
@@ -243,7 +286,7 @@ const Option = Select.Option;
             {
                 datastart:'',
                 dataend:'',
-                isnow:false,
+                isnow:'n',
                 pname:'',
                 crole:'',
                 projectcontent:''
@@ -278,7 +321,7 @@ const Option = Select.Option;
             {
                 datastart:'',
                 dataend:'',
-                isnow:false,
+                isnow:'n',
                 eduname:'',
                 education:'',
                 major:''
@@ -316,22 +359,32 @@ const Option = Select.Option;
             [type]: value,
           });
       }
+      delete(){
+        fetch('http://10.125.4.32:8080/xiaoniuzp/api/xnzp/abilityPerson/'+this.state.uid,{mode: 'cors',method:'delete'}).then(res => res.json()).then(res => {
+            message.success('删除成功', [0.5])            
+            setTimeout(()=>{
+                this.props.history.push('/home/talents')
+            },500)
+        }).catch(()=>{
+            message.error("删除失败", [1])
+        })            
+      }
     render(){
         
         let sex= this.state.sex.map(function(item,key){
-            return <Option key={item} value={item}>{item}</Option>
+            return <Option key={key} value={item}>{item}</Option>
         })
         let workingLife=this.state.workingLife.map(function(item,key){
-            return <Option key={item} value={item}>{item}</Option>
+            return <Option key={key} value={item}>{item}</Option>
         })
         let education=this.state.education.map(function(item,key){
-            return <Option key={item} value={item}>{item}</Option>
+            return <Option key={key} value={item}>{item}</Option>
         })
         let channel=this.state.channel.map(function(item,key){
-            return <Option key={item} value={item}>{item}</Option>
+            return <Option key={key} value={item.uid}>{item.channelName}</Option>
         })
         let referee=this.state.referee.map((item,key)=>{
-            return <Option value={item} key={item}>{item}</Option>
+            return <Option value={item.uid} key={key}>{item.refereename}</Option>
         })
         let work=this.state.works.map((item,key)=>{
             return <div key={key}>{item}</div>
@@ -343,7 +396,8 @@ const Option = Select.Option;
             return <div key={key}>{item}</div>
         })
         return(
-            <div>
+            <div style={{position:'relative'}} >
+            <a style={{position:'absolute',top:0,right:0,color:'red',display:this.state.deleteshow===true?'block':'none'}} onClick={this.delete.bind(this)} >删除</a>
             <h3>个人信息</h3>
             <div style={{marginBottom:20}}>
               <div>候选人姓名<span style={{color:'red'}}>*</span></div>  
@@ -449,9 +503,9 @@ const Option = Select.Option;
                     cancelText="取消"
                     >
                     <div>名字<span style={{color:'red'}}>*</span></div>
-                    <Input/>
+                    <Input ref={(input) => { this.rname = input; }}/>
                     <div>邮箱<span style={{color:'red'}}>*</span></div>
-                    <Input/>
+                    <Input ref={(input) => { this.remail = input; }}/>
                     </Modal>
                     </div>  
         )

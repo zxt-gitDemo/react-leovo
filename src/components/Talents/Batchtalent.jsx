@@ -4,22 +4,7 @@ import {withRouter,Router, Route,Link,NavLink,Switch} from 'react-router-dom';
 const { Header, Content, Footer, Sider } = Layout;
 const Option = Select.Option;
 const Dragger = Upload.Dragger;
-const props = {
-    name: 'file',
-    multiple: true,
-    action: '//jsonplaceholder.typicode.com/posts/',
-    onChange(info) {
-      const status = info.file.status;
-      if (status !== 'uploading') {
-        console.log(info.file, info.fileList);
-      }
-      if (status === 'done') {
-        message.success(`${info.file.name} file uploaded successfully.`);
-      } else if (status === 'error') {
-        message.error(`${info.file.name} file upload failed.`);
-      }
-    },
-  };
+
  class Batchtalent extends Component {
     state = {
         modalVisible: false,
@@ -29,27 +14,52 @@ const props = {
         referee:[],
         sjob:'',
         schannel:'',
-        sreferee:''
+        sreferee:'',
+        fileid:[]
       }
       componentDidMount(){
-        // fetch('/Local/common/data.json').then(res => res.json()).then(res => {
-        //     let { channel} = res.data.basic           
-        //     this.setState({channel:channel})
-        // })
-        // fetch('./job.json').then(res => res.json()).then(res => {
-        //     let {job,referee} = res.data           
-        //     this.setState({job:job})
-        //     this.setState({referee:referee})
-        // })
+        fetch('http://10.125.4.32:8080/xiaoniuzp/api/xnzp/public/getbas',{mode:'cors',method:'get'}).then(res => res.json()).then(res => {
+            let {job,channel,referee} = res.body
+            console.log(res.body)
+            this.setState({
+                job:job,
+                channel:channel,
+                referee:referee
+            })
+        })  
       }
       setModalVisible(modalVisible) {
-        this.setState({ modalVisible });
-      }
+        let name=this.rname.input.value
+        let email=this.remail.input.value
+        if(name===""||email===""){
+            message.warning("不能为空", [1])            
+        }else{
+        fetch('http://10.125.4.32:8080/xiaoniuzp/api/xnzp/referee',{mode:'cors',method:'post',
+                    headers: {'Content-Type': 'application/json;charset=UTF-8'},
+                    body:JSON.stringify({
+                        "refereename":name,
+                        "refereeEMail":email
+                    }),
+                    }).then(res => res.json()).then(res => {
+                    message.success("保存成功", [1])
+                    fetch('http://10.125.4.32:8080/xiaoniuzp/api/xnzp/public/getbas',{mode:'cors',method:'get'}).then(res => res.json()).then(res => {
+                        let {referee} = res.body
+                        this.setState({referee:referee})
+                    })   
+                    this.setState({ modalVisible });
+
+                }).catch(()=>{
+                    message.error("保存失败", [1])
+        })   
+        }
+        
+       
+      } //显示添加推荐人弹窗
       channelchange(type,v){
          this.setState({
              [type]: v,
            },()=>{
-            if(this.state.schannel!="内推"){
+            if(this.state.schannel!="1e8accab6896417799db84bd42d01d06"){
                 this.setState({refereeVisible:'none'})
             }else{
                 this.setState({refereeVisible:'block'})
@@ -60,8 +70,31 @@ const props = {
       addtalents(){
 
       }
+      setFileid(data){
+          this.setState({
+            fileid:data
+          })
+
+      }
     render(){
-        console.log(this.state)
+        let self=this;
+        const props = {
+            name: 'file',
+            multiple: true,
+            action: 'http://10.125.4.32:8080/xiaoniuzp/api//base/attachment/upload',
+            onChange(info) {
+              const status = info.file.status;
+              if (status !== 'uploading') {
+                console.log(info.file, info.fileList);
+              }
+              if (status === 'done') {
+                message.success(`${info.file.name} file uploaded successfully.`);
+              } else if (status === 'error') {
+                message.error(`${info.file.name} file upload failed.`);
+                return self.setFileid()
+              }
+            },
+          };
         return (
             <Layout style={{marginLeft:300}}>
                  <Content style={{background:'white',padding:20,height:'520px'}}>
@@ -78,7 +111,7 @@ const props = {
                     >
                     {
                         this.state.job.map((item,key)=>{
-                            return <Option value={item} key={key}>{item}</Option>
+                            return <Option value={item.uid} key={key}>{item.jobname}</Option>
                         })
                     }
                     </Select>
@@ -97,7 +130,7 @@ const props = {
                     >
                         {
                             this.state.channel.map((item,key)=>{
-                                return <Option value={item} key={key}>{item}</Option>
+                                return <Option value={item.uid} key={key}>{item.channelName}</Option>
                             })
                         }
                     </Select>
@@ -116,7 +149,7 @@ const props = {
                     >
                         {
                             this.state.referee.map((item,key)=>{
-                                return <Option value={item} key={key}>{item}</Option>
+                                return <Option value={item.uid} key={key}>{item.refereename}</Option>
                             })
                         }
                     </Select>
@@ -138,10 +171,10 @@ const props = {
                     okText="保存"
                     cancelText="取消"
                     >
-                    <div>名字<span style={{color:'red'}}>*</span></div>
-                    <Input/>
-                    <div>邮箱<span style={{color:'red'}}>*</span></div>
-                    <Input/>
+                   <div>名字<span style={{color:'red'}}>*</span></div>
+                   <Input ref={(input) => { this.rname = input; }}/>
+                   <div>邮箱<span style={{color:'red'}}>*</span></div>
+                   <Input ref={(input) => { this.remail = input; }}/>
                     </Modal>
                  </Content>
                  <Sider width={350} style={{background:'#F3F3F3',padding:10}}>

@@ -73,7 +73,7 @@ export default class Talentinformation extends Component {
         }
     }
    componentDidMount(){
-    fetch('Local/import/candidate.json').then(res => res.json()).then(res => {
+    fetch('/Local/import/candidate.json').then(res => res.json()).then(res => {
         let basic = res.data
         let work=res.data.works;
         let project=res.data.projects;
@@ -88,7 +88,7 @@ export default class Talentinformation extends Component {
             
         })      
     })
-    fetch('Local/job/job.json').then(res => res.json()).then(res => {
+    fetch('/Local/job/job.json').then(res => res.json()).then(res => {
         let { job,workAddress} = res.data 
         this.setState({
             jobs:job,
@@ -96,7 +96,7 @@ export default class Talentinformation extends Component {
 
         })     
     })
-    fetch('Local/interview/Interviewtime.json').then(res => res.json()).then(res => {
+    fetch('/Local/interview/Interviewtime.json').then(res => res.json()).then(res => {
         let {interview} = res.data 
         this.setState({
             interview:interview
@@ -274,7 +274,7 @@ export default class Talentinformation extends Component {
           let basic=this.state.basic
         return (
             <Layout style={{marginLeft:300}}>
-            <Content style={{background:'white',padding:20,height:'500px'}}>
+            <Content style={{background:'white',padding:20,height:'520px'}}>
                 <div style={{position:'relative'}}>
                     <h1 style={{display:'inline-block',marginRight:20}}>{basic.candidate}</h1><span>渠道：{basic.channel}</span>
                     <a style={{position:'absolute',top:15,right:0}}><Icon type="edit"/>编辑</a>

@@ -37,7 +37,7 @@ class Homepage extends Component {
                      {/* 新建职位的发布 */}
                     <Route path="/home/jobs/newthird" component={Newthird}/>
                      {/*新建职位的面试评价表  */}
-                    <Route path="/home/talents/newtalent" component={Newtalent}/> 
+                    <Route path="/home/talents/newtalent/:id?" component={Newtalent}/> 
                     {/* 新建候选人 */}
                     <Route path="/home/talents/batchtalent" component={Batchtalent}/>
                     {/* 批量新建候选人  */}

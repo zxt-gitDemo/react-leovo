@@ -32,7 +32,7 @@ export default class Screening extends Component {
             let educations=education.map(v => ({ value: v, isActive: false }))
             let workingLifes=workingLife.map(v => ({ value: v, isActive: false }))
             let sexs=sex.map(v => ({ value: v, isActive: false }))
-            this.setState({channel:channel})
+            // this.setState({channel:channel})
             this.setState({education:educations})
             this.setState({workingLife:workingLifes})
             this.setState({sex:sexs})

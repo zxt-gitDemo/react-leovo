@@ -21,41 +21,37 @@ const Dragger = Upload.Dragger;
     onselect(value){
         this.props.changejob(value)
     }
-    setJson=()=>{
-        fetch('/Local/import/candidate.json').then(res => res.json()).then(res => {
+    setJson=(uid)=>{
+        console.log(uid)
             this.setState({
-                data:res.data
+                data:uid
             },function(){
                 this.props.userjson(this.state.data) 
             }
-        )
-            
-        })
-        
+        )  
     }
     render(){
         let self=this
       
         const up = {
             name: 'file',
-            multiple: true,
-            action: 'htttp://10.125.4.32:8080/xiaoniuzp/api/base/attachment/upload?mothod=post',
+            multiple: false,
+            action: 'http://10.125.4.32:8080/xiaoniuzp/api//base/attachment/upload',
             onChange(info) {
               const status = info.file.status;
               if (status !== 'uploading') {
                 console.log(info.file, info.fileList);
               }
-              if (status === 'done') {
+              if (status === 'done') {  
                 message.success(`${info.file.name} file uploaded successfully.`);
+                let data=info.file.response.body.data[0]
+                console.log(data)
+                return self.setJson(data)
               } else if (status === 'error') {
-                console.log(info)
                 message.error(`${info.file.name} file upload failed.`);
-                return self.setJson()
-              
               }
             }
           };
-        //   console.log(self)
         return (
             <div>
                 <Button onClick={()=>this.props.history.push('/home')}>取消</Button>

@@ -17,16 +17,21 @@ export default class Talents extends Component {
         }
     }
     componentDidMount(){
-        fetch('/Local/job/job.json').then(res => res.json()).then(res => {
-            let job=res.data.job;
+        fetch('http://10.125.4.32:8080/xiaoniuzp/api/xnzp/public/getbas',{mode:'cors',method:'get'}).then(res => res.json()).then(res => {
+            let {job} = res.body
+            this.setState({job:job})
+        })  
+        fetch('http://10.125.4.32:8080/xiaoniuzp/api/xnzp/abilityPerson/query?page=0&size=20&sort=created,desc',{mode: 'cors',method:'post'}).then(res => res.json()).then(res => {
+            let lists=res.body.content;
+            console.log(lists)
             this.setState({
-                job:job
-            })
+                lists:lists
+              })  
         })
-        fetch('/Local/information/talents.json').then(res => res.json()).then(res => {
-            let list=res.data.list
-            this.setState({lists:list})
-        })
+        // fetch('/Local/information/candidates.json').then(res => res.json()).then(res => {
+        //     let list=res.data.list
+        //     this.setState({lists:list})
+        // })
     }
     req(condition1,condition2){
         console.log(condition1)
@@ -64,7 +69,7 @@ export default class Talents extends Component {
     }
     render() {
         return (
-            <Layout style={{height:'520px'}}>
+            <Layout style={{height:'520px',zIndex:5}}>
             <Sider width={300}
             style={{background:'#f3f3f3',padding:20,height:'500px',overflow:'auto'}}
             >
@@ -85,7 +90,7 @@ export default class Talents extends Component {
                 >
                 {
                     this.state.job.map((item,key)=>{
-                           return  <Option value={item} key={key}>{item}</Option> 
+                           return  <Option value={item.uid} key={key}>{item.jobname}</Option> 
                     })
                 }
                     

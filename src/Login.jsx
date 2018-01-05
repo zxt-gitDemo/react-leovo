@@ -20,6 +20,7 @@ const FormItem = Form.Item;
         body:JSON.stringify(data)
     }).then(res => res.json()).then(res => {
        if(res.message='登录成功'){
+        //    localStorage.setItem('displayName',res.body.name)
             Cookies.set('id',res.body.id)
             Cookies.set('username',res.body.name)
            this.props.history.push('/home')

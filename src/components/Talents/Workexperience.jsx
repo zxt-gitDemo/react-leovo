@@ -6,15 +6,18 @@ moment.locale('zh-cn');
 const Option = Select.Option;
 const { TextArea } = Input;
 export default class Workexperience extends Component {
-    state = {
+  constructor(props){
+    super(props);
+    this.state = {
         startValue:this.props.work.datastart===undefined?null:moment(this.props.work.datastart, 'YYYY-MM'),
         endValue: this.props.work.dataend===undefined?null:moment(this.props.work.dataend, 'YYYY-MM'),
         endOpen: false,
         cname:this.props.work.cname,
         jobname:this.props.work.jobname,
         workcontent:this.props.work.workcontent,
-        checked:this.props.work.isnow
-      };
+        ischecked:this.props.work.isnow===undefined?'n':this.props.work.isnow
+      }
+    }
       disabledStartDate = (startValue) => {
         const endValue = this.state.endValue;
         if (!startValue || !endValue) {
@@ -80,15 +83,25 @@ export default class Workexperience extends Component {
         this.props.editwork(arrindex,e.target.value,type)
       }
       checkclick(){
-        this.setState({
-          checked:!this.state.checked
-        })
-        if(this.state.checked==false){
-          let arrindex=this.keyid.getAttribute('data-key')
-          let value=new Date()
-          this.props.editwork(arrindex,value,'dataend')
+        console.log(this.state.ischecked)
+        if(this.state.ischecked==="n"){
+          this.setState({
+            ischecked:'y'
+          },function(){
+            this.onEndChange();
+            let arrindex=this.keyid.getAttribute('data-key')
+            this.props.editwork(arrindex,"",'dataend')
+            this.props.editwork(arrindex,this.state.ischecked,'isnow')
+          }
+        )
         }else{
-          this.onEndChange();
+          this.setState({
+            ischecked:'n'
+          },function(){
+            let arrindex=this.keyid.getAttribute('data-key')
+            this.props.editwork(arrindex,this.state.ischecked,'isnow')            
+          })
+          
         }
        
       }
@@ -107,7 +120,7 @@ export default class Workexperience extends Component {
                     value={startValue}
                     placeholder="Start"
                     onChange={this.onStartChange}
-                    onOpenChange={this.handleStartOpenChange}
+                    // onOpenChange={this.handleStartOpenChange}
                     style={{width:'100%'}}
                     />
                   
@@ -125,11 +138,11 @@ export default class Workexperience extends Component {
                     open={endOpen}
                     onOpenChange={this.handleEndOpenChange}
                     style={{width:'100%'}}
-                    disabled={this.state.checked}
+                    disabled={this.state.ischecked==="n"?false:true}
                     />
                 </div>
                 <div style={{width:'10%',display:'inline-block',marginLeft:10}}>
-                   <Checkbox checked={this.state.checked} onChange={this.checkclick.bind(this)}>至今</Checkbox> 
+                   <Checkbox checked={this.state.ischecked==="n"?false:true} onChange={this.checkclick.bind(this)}>至今</Checkbox> 
                 </div>
                 </div>
                 <div>

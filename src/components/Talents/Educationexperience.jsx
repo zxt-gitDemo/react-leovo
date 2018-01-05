@@ -14,7 +14,7 @@ export default class Educationexperience extends Component {
         endValue: this.props.education.dataend===undefined?null:moment(this.props.education.dataend, 'YYYY-MM'),
             endOpen: false,
             educations:[],
-            checked:false,
+            ischecked:this.props.education.isnow===undefined?'n':this.props.education.isnow,
             eduname:this.props.education.eduname,
             major:this.props.education.major,
             education:this.props.education.education
@@ -103,15 +103,25 @@ export default class Educationexperience extends Component {
         this.props.editeducations(arrindex,value,type)
       }
       checkclick(){
-        this.setState({
-          checked:!this.state.checked
-        })
-        if(this.state.checked==false){
-          let arrindex=this.keyid.getAttribute('data-key')
-          let value=new Date()
-          this.props.editeducations(arrindex,value,'dataend')
+        console.log(this.state.ischecked)
+        if(this.state.ischecked==="n"){
+          this.setState({
+            ischecked:'y'
+          },function(){
+            this.onEndChange();
+            let arrindex=this.keyid.getAttribute('data-key')
+            this.props.editeducations(arrindex,"",'dataend')
+            this.props.editeducations(arrindex,this.state.ischecked,'isnow')
+          }
+        )
         }else{
-          this.onEndChange();
+          this.setState({
+            ischecked:'n'
+          },function(){
+            let arrindex=this.keyid.getAttribute('data-key')
+            this.props.editeducations(arrindex,this.state.ischecked,'isnow')            
+          })
+          
         }
        
       }
@@ -148,11 +158,11 @@ export default class Educationexperience extends Component {
                     open={endOpen}
                     onOpenChange={this.handleEndOpenChange}
                     style={{width:'100%'}}
-                    disabled={this.state.checked}
+                    disabled={this.state.ischecked==="n"?false:true}                 
                     />
                 </div>
                 <div style={{width:'10%',display:'inline-block',marginLeft:10}}>
-                   <Checkbox onChange={this.checkclick.bind(this)} checked={this.state.checked}>至今</Checkbox> 
+                   <Checkbox onChange={this.checkclick.bind(this)} checked={this.state.ischecked==="n"?false:true}>至今</Checkbox> 
                 </div>
                 </div>
                 <div style={{marginBottom:20}}>

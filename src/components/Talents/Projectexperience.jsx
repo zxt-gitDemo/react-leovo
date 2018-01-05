@@ -12,7 +12,7 @@ export default class Projectexperience extends Component {
         pname:this.props.project.pname,
         crole:this.props.project.crole,
         projectcontent:this.props.project.projectcontent,
-        checked:this.props.project.isnow
+        ischecked:this.props.project.isnow===undefined?'n':this.props.project.isnow
       };
     
       disabledStartDate = (startValue) => {
@@ -31,7 +31,7 @@ export default class Projectexperience extends Component {
         return endValue.valueOf() <= startValue.valueOf();
       }
     
-      onChange = (field, value) => {
+       onChange = (field, value) => {
         this.setState({
           [field]: value,
         });
@@ -79,16 +79,24 @@ export default class Projectexperience extends Component {
         this.props.editproject(arrindex,e.target.value,type)
       }
       checkclick(){
-        
-        this.setState({
-          checked:!this.state.checked
-        })
-        if(this.state.checked==false){
-          let arrindex=this.keyid.getAttribute('data-key')
-          let value=new Date()
-          this.props.editproject(arrindex,value,'dataend')
+        if(this.state.ischecked==="n"){
+          this.setState({
+            ischecked:'y'
+          },function(){
+            this.onEndChange();
+            let arrindex=this.keyid.getAttribute('data-key')
+            this.props.editproject(arrindex,"",'dataend')
+            this.props.editproject(arrindex,this.state.ischecked,'isnow')
+          }
+        )
         }else{
-          this.onEndChange();
+          this.setState({
+            ischecked:'n'
+          },function(){
+            let arrindex=this.keyid.getAttribute('data-key')
+            this.props.editproject(arrindex,this.state.ischecked,'isnow')            
+          })
+          
         }
        
       }
@@ -126,11 +134,11 @@ export default class Projectexperience extends Component {
                   open={endOpen}
                   onOpenChange={this.handleEndOpenChange}
                   style={{width:'100%'}}
-                  disabled={this.state.checked}                  
+                  disabled={this.state.ischecked==="n"?false:true}                 
                   />
               </div>
               <div style={{width:'10%',display:'inline-block',marginLeft:10}}>
-                 <Checkbox checked={this.state.checked} onChange={this.checkclick.bind(this)} >至今</Checkbox> 
+                 <Checkbox checked={this.state.ischecked==="n"?false:true} onChange={this.checkclick.bind(this)} >至今</Checkbox> 
               </div>
               </div>
               <div style={{marginBottom:20}}>

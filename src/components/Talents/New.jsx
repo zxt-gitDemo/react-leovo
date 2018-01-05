@@ -27,7 +27,7 @@ export default class Newtalent extends Component {
     render(){
         return(
             <Layout style={{marginLeft:300}}>
-            <Content style={{background:'white',padding:20,height:'520px'}}>
+            <Content style={{background:'white',padding:20,height:'500px'}}>
                 <Edit job={this.state.job} data={this.state.data}/>
             </Content>
             <Sider width={350} style={{background:'#F3F3F3',padding:10}}>
