@@ -6,9 +6,16 @@ const { Header, Content, Footer, Sider } = Layout;
 const Option = Select.Option;
  class Talentsdetails extends Component {
     seeperson(uid){
-        this.props.history.push('/home/talents/newtalent/'+uid)
+        this.props.history.push('/home/talents/information/'+uid)
     }
     render() {
+       let item=this.props.lists;
+       console.log(item)
+       let personwork=item.personwork;
+       let cname=personwork===undefined?'':personwork.cname;
+       let jobname=item.personwork===undefined?'':item.personwork.jobname;
+       console.log(personwork)
+       console.log(jobname)
         return (
            
             <div style={{width:'100%',height:400,overflow:'auto'}}  >
@@ -24,13 +31,16 @@ const Option = Select.Option;
                                     <div><span style={{marginRight:20}}>{item.abilityname}</span> <span>{item.sex}</span> <Divider type="vertical" /><span>{item.workLife}</span></div>
                                     
                                     <div style={{color:'#ccc'}}>
-                                    <div><Icon type="team"/> <span>{item.company}</span> <Divider type="vertical" /><span>{item.job}</span></div>
-                                    {/* <div><Icon type="home"/> 
-                                    <span>{item.personeducations[0].eduname===undefined?'':item.personeducations[0].eduname}</span> 
+                                    <div><Icon type="team"/> <span>{cname}</span> 
+                                    <Divider type="vertical" />
+                                    <span>{jobname}</span></div>
+                                    <div><Icon type="home"/> 
+                                    {/* <span>{item.personeducations[0].eduname===undefined?'':item.personeducations[0].eduname}</span> 
                                     <Divider type="vertical" />
                                     <span>{item.personeducations[0].major===undefined?'':item.personeducations[0].major}</span>
                                     <Divider type="vertical" />
-                                    <span>{item.personeducations[0].education?'':item.personeducations[0].education}</span></div> */}
+                                    <span>{item.personeducations[0].education?'':item.personeducations[0].education}</span> */}
+                                    </div>
                                     </div>
                                 </div>
                                 <div style={{display:'inline-block',width:'30%',verticalAlign:'top'}}>{item.created}</div>

@@ -15,12 +15,11 @@ const Dragger = Upload.Dragger;
         sjob:'',
         schannel:'',
         sreferee:'',
-        fileid:[]
+        fileid:["id1","id2","id3"]
       }
       componentDidMount(){
         fetch('http://10.125.4.32:8080/xiaoniuzp/api/xnzp/public/getbas',{mode:'cors',method:'get'}).then(res => res.json()).then(res => {
             let {job,channel,referee} = res.body
-            console.log(res.body)
             this.setState({
                 job:job,
                 channel:channel,
@@ -68,7 +67,10 @@ const Dragger = Upload.Dragger;
         
       }//如果不是内推则隐藏推荐人
       addtalents(){
-
+        console.log(this.state.sjob)
+        console.log(this.state.schannel)
+        console.log(this.state.sreferee)
+        console.log(this.state.fileid)
       }
       setFileid(data){
           this.setState({
@@ -80,6 +82,7 @@ const Dragger = Upload.Dragger;
         let self=this;
         const props = {
             name: 'file',
+            accept:'text/html,application/msword,application/pdf',
             multiple: true,
             action: 'http://10.125.4.32:8080/xiaoniuzp/api//base/attachment/upload',
             onChange(info) {
@@ -159,7 +162,7 @@ const Dragger = Upload.Dragger;
                             <p className="ant-upload-drag-icon">
                             <Icon type="cloud-upload" />
                             </p>
-                            <p className="ant-upload-text">点击或拖拽上传简历(html、pdf、doc、docx)</p>
+                            <p className="ant-upload-text">点击或拖拽上传简历(html、pdf、doc)</p>
                         
                         </Dragger>
                         </div>

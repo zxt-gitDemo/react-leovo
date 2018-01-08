@@ -22,7 +22,6 @@ const Dragger = Upload.Dragger;
         this.props.changejob(value)
     }
     setJson=(uid)=>{
-        console.log(uid)
             this.setState({
                 data:uid
             },function(){
@@ -30,13 +29,25 @@ const Dragger = Upload.Dragger;
             }
         )  
     }
+   randomString(len, charSet) {
+        charSet = charSet || 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+        var randomString = '';
+        for (var i = 0; i < len; i++) {
+         var randomPoz = Math.floor(Math.random() * charSet.length);
+         randomString += charSet.substring(randomPoz,randomPoz+1);
+        }
+        return randomString;
+      }
     render(){
-        let self=this
-      
+        let self=this;
         const up = {
             name: 'file',
+            accept:'text/html,application/msword,application/pdf',
             multiple: false,
-            action: 'http://10.125.4.32:8080/xiaoniuzp/api//base/attachment/upload',
+            action: 'http://10.125.4.32:8080/xiaoniuzp/api/xnzp/public/upload',
+            data:{
+                attachmentId:self.randomString(32)
+            },
             onChange(info) {
               const status = info.file.status;
               if (status !== 'uploading') {
@@ -44,8 +55,7 @@ const Dragger = Upload.Dragger;
               }
               if (status === 'done') {  
                 message.success(`${info.file.name} file uploaded successfully.`);
-                let data=info.file.response.body.data[0]
-                console.log(data)
+                let data=info.file.response.body.data[0].entitymsg
                 return self.setJson(data)
               } else if (status === 'error') {
                 message.error(`${info.file.name} file upload failed.`);
@@ -61,7 +71,7 @@ const Dragger = Upload.Dragger;
                     <div className="ant-upload-drag-icon" style={{marginBottom:20}}>
                     <Icon type="cloud-upload" />
                     </div>
-                    <p className="ant-upload-text">请把文件拖拽到这里上传</p>
+                    <p className="ant-upload-text">点击或拖拽上传简历(html、pdf、doc)</p>
                    
                 </Dragger>
                 </div>

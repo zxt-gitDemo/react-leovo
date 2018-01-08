@@ -27,7 +27,7 @@ class Homepage extends Component {
 
                 <Layout>
                   <Head />
-                  <Content style={{margin:'60px 0 0 0',zIndex:10,paddingTop:10}}>
+                  <Content style={{margin:'60px 0 0 0',zIndex:10,paddingTop:10,height:530}}>
                   <Switch>
                     <Route exact path="/home/jobs/newjob/:id?" component={Newjob}/>
                     {/* 新建职位 */}
@@ -41,7 +41,7 @@ class Homepage extends Component {
                     {/* 新建候选人 */}
                     <Route path="/home/talents/batchtalent" component={Batchtalent}/>
                     {/* 批量新建候选人  */}
-                    <Route path="/home/talents/information" component={Talentinformation}/>
+                    <Route path="/home/talents/information/:id" component={Talentinformation}/>
                     {/* 人才库个人信息  */}
                     <Route path="/home/candidatedetails" component={Candidatedetails}/>
                     {/* 全部候选人信息  */}
@@ -62,7 +62,7 @@ class Homepage extends Component {
                     
                   </Switch>
                   </Content>
-                  <Footer style={{ textAlign: 'center',position:'fixed',bottom:0,zIndex:20,width:'100%'}}>
+                  <Footer style={{ textAlign: 'center',width:'100%'}}>
                             Ant Design ©2016 Created by Ant UED
                   </Footer>
                 </Layout>

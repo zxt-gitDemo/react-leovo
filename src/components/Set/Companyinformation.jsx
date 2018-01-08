@@ -27,9 +27,9 @@ export default class Company extends Component {
         }
         this.columns = [{
           title: '城市',
-          dataIndex: 'name',
+          dataIndex: 'city',
           width: '25%',
-          render: (text, record) => this.renderColumns(text, record, 'name'),
+          render: (text, record) => this.renderColumns(text, record, 'city'),
         }, {
           title: '详情地址',
           dataIndex: 'address',
@@ -59,9 +59,9 @@ export default class Company extends Component {
         }];
         this.columns2 = [{
           title: '部门名称',
-          dataIndex: 'name',
+          dataIndex: 'deptname',
           width: '50%',
-          render: (text, record) => this.renderColumns2(text, record, 'name'),
+          render: (text, record) => this.renderColumns2(text, record, 'deptname'),
         }, {
           title: '操作',
           dataIndex: '操作',
@@ -89,23 +89,34 @@ export default class Company extends Component {
 
       }
       componentDidMount(){
-        fetch('Local/common/data.json').then(res => res.json()).then(res => {
+        fetch('/Local/common/data.json').then(res => res.json()).then(res => {
           let {industry,number}=res.data.basic;
-          this.setState({industry:industry})
+          // this.setState({industry:industry})
           this.setState({number:number })
         })
-        fetch('./set/company.json').then(res => res.json()).then(res => {
-          let {name,address,industry,number,website}=res.data.basic
-          let {workAddress,department,recruitmentwebsite}=res.data
-          this.setState({ourcompanyname:name})
-          this.setState({ourcompanyaddress:address})
-          this.setState({ourcompanyindustry:industry})
-          this.setState({ourcompanynumber:number})
-          this.setState({ourcompantwebsite:website})      
-          this.setState({workAddress:workAddress})          
-          this.setState({department:department})          
-          this.setState({recruitmentwebsite:recruitmentwebsite})          
+        fetch('http://10.125.4.32:8080/xiaoniuzp/api/xnzp/public/getbas',{mode:'cors',method:'get'}).then(res => res.json()).then(res => {
+            let {dept,address} = res.body
+            dept.map((item,key)=>{
+              return dept[key]['key']=key
+            })
+            console.log(dept)
+            this.setState({
+              workAddress:address,
+              department:dept
+            })
         })
+        // fetch('./set/company.json').then(res => res.json()).then(res => {
+        //   let {name,address,industry,number,website}=res.data.basic
+        //   let {workAddress,department,recruitmentwebsite}=res.data
+        //   this.setState({ourcompanyname:name})
+        //   this.setState({ourcompanyaddress:address})
+        //   this.setState({ourcompanyindustry:industry})
+        //   this.setState({ourcompanynumber:number})
+        //   this.setState({ourcompantwebsite:website})      
+        //   this.setState({workAddress:workAddress})          
+        //   this.setState({department:department})          
+        //   this.setState({recruitmentwebsite:recruitmentwebsite})          
+        // })
       }
       
       renderColumns(text, record, column) {

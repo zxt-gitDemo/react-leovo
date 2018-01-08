@@ -74,14 +74,17 @@ const Option = Select.Option;
        
        if(objnull.length == 0){
        }else{
-         console.log(nextProps.data)
         this.againReq(nextProps.data)
        }
         
     }
     againReq(data){
-        let { created,updated,updstamp,abilityname,address,sex,age,phone,email,workLife,education,channel,referee,personworks:ws,personprojects:ps,personeducations:es} = data
-        console.log(data)
+        let { created,updated,updstamp,abilityname,address,sex,age,phone,email,workLife,education,channeluid,refereeuid,personworks:ws,personprojects:ps,personeducations:es} = data
+        if(channeluid===null||channeluid===""){
+            
+        }else{
+            this.setState({schannel:channeluid})
+        }
         this.setState({sname:abilityname})
         this.setState({saddress:address})
         this.setState({ssex:sex})
@@ -89,9 +92,8 @@ const Option = Select.Option;
         this.setState({sphone:phone})
         this.setState({semail:email})
         this.setState({sworkLife:workLife})
-        this.setState({seducation:education})
-        this.setState({schannel:channel})
-        this.setState({sreferee:referee})
+        this.setState({seducation:education}) 
+        this.setState({sreferee:refereeuid})
         this.setState({created:created})
         this.setState({updated:updated})
         this.setState({updstamp:updstamp})
@@ -194,7 +196,6 @@ const Option = Select.Option;
             updated:updated,
             updstamp:updstamp
           }
-          console.log(obj)
           if(name===""){
             message.warning("姓名不能为空", [1])
           }else{

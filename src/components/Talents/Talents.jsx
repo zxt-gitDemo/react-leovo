@@ -21,9 +21,8 @@ export default class Talents extends Component {
             let {job} = res.body
             this.setState({job:job})
         })  
-        fetch('http://10.125.4.32:8080/xiaoniuzp/api/xnzp/abilityPerson/query?page=0&size=20&sort=created,desc',{mode: 'cors',method:'post'}).then(res => res.json()).then(res => {
-            let lists=res.body.content;
-            console.log(lists)
+        fetch('http://10.125.4.32:8080/xiaoniuzp/api/xnzp/abilityPerson/querylist?page=0&size=20&sort=created,desc',{mode: 'cors',method:'post'}).then(res => res.json()).then(res => {
+            let lists=res.body;
             this.setState({
                 lists:lists
               })  

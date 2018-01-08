@@ -73,29 +73,25 @@ export default class Talentinformation extends Component {
         }
     }
    componentDidMount(){
-    fetch('/Local/import/candidate.json').then(res => res.json()).then(res => {
-        let basic = res.data
-        let work=res.data.works;
-        let project=res.data.projects;
-        let edu=res.data.educations;
-        this.setState({
-            basic:basic,
-            tags:res.data.label,
-            work:work,
-            project:project,
-            edu:edu,
-            applyJobs:res.data.applyJobs
+    let uid=this.props.match.params.id;
+    fetch('http://10.125.4.32:8080/xiaoniuzp/api/xnzp/abilityPerson/'+uid,{mode: 'cors',method:'get'}).then(res => res.json()).then(res => {
+        console.log(res.body)   
+    this.setState({
+            basic:res.body,
+            tags:res.body.clabels,
+            work:res.body.personworks,
+            project:res.body.personprojects,
+            edu:res.body.personeducations,
+            applyJobs:res.body.personapplyJobs
             
-        })      
+        })  
     })
-    fetch('/Local/job/job.json').then(res => res.json()).then(res => {
-        let { job,workAddress} = res.data 
-        this.setState({
-            jobs:job,
-            workAddress:workAddress,
-
-        })     
-    })
+    fetch('http://10.125.4.32:8080/xiaoniuzp/api/xnzp/public/getbas',{mode:'cors',method:'get'}).then(res => res.json()).then(res => {
+            let {job,address} = res.body
+            this.setState({jobs:job,
+                workAddress:address
+            })
+        })
     fetch('/Local/interview/Interviewtime.json').then(res => res.json()).then(res => {
         let {interview} = res.data 
         this.setState({
@@ -110,7 +106,6 @@ export default class Talentinformation extends Component {
             interviewarranges:[],
             arranges:[]
         })
-        console.log(id)
         fetch('./Interviewtime.json').then(res => res.json()).then(res => {
             let {date,mode,list,email,iaddress} = res.data.interview[0]
             this.setState({
@@ -155,8 +150,18 @@ export default class Talentinformation extends Component {
       }
       handleClose = (removedTag) => {
         const tags = this.state.tags.filter(tag => tag !== removedTag);
-        console.log(tags);
-        this.setState({ tags });
+        fetch('http://10.125.4.32:8080/xiaoniuzp/api/xnzp/abilityPerson/saveclabel',{mode:'cors',method:'post',
+            headers: {'Content-Type': 'application/json;charset=UTF-8'},
+            body:JSON.stringify({
+                uid:this.props.match.params.id,
+                clabels:tags
+            }),
+            }).then(res => res.json()).then(res => {
+                this.setState({ tags });
+            }).catch(()=>{
+                message.error("删除标签失败", [1])
+            })  
+        
       }
     
       showInput = () => {
@@ -174,12 +179,24 @@ export default class Talentinformation extends Component {
         if (inputValue && tags.indexOf(inputValue) === -1) {
           tags = [...tags, inputValue];
         }
-        console.log(tags);
-        this.setState({
-          tags,
-          inputVisible: false,
-          inputValue: '',
-        });
+        fetch('http://10.125.4.32:8080/xiaoniuzp/api/xnzp/abilityPerson/saveclabel',{mode:'cors',method:'post',
+            headers: {'Content-Type': 'application/json;charset=UTF-8'},
+            body:JSON.stringify({
+                uid:this.props.match.params.id,                
+                clabels:tags
+            }),
+            }).then(res => res.json()).then(res => {
+                    this.setState({
+                        tags,
+                        inputVisible: false,
+                        inputValue: '',
+                      });
+
+                
+            }).catch(()=>{
+                message.error("新增标签失败", [1])
+            })  
+        
       }
       start(value){
           this.setState({
@@ -264,9 +281,14 @@ export default class Talentinformation extends Component {
 
   }
   clicktab(key){
+      console.log(this.state.tabkey)
       this.setState({
         tabkey:key
       })
+  }
+  editperson(uid){
+    this.props.history.push('/home/talents/newtalent/'+uid)
+
   }
       saveInputRef = input => this.input = input
     render(){
@@ -276,8 +298,8 @@ export default class Talentinformation extends Component {
             <Layout style={{marginLeft:300}}>
             <Content style={{background:'white',padding:20,height:'520px'}}>
                 <div style={{position:'relative'}}>
-                    <h1 style={{display:'inline-block',marginRight:20}}>{basic.candidate}</h1><span>渠道：{basic.channel}</span>
-                    <a style={{position:'absolute',top:15,right:0}}><Icon type="edit"/>编辑</a>
+                    <h1 style={{display:'inline-block',marginRight:20}}>{basic.abilityname}</h1><span>渠道：{basic.channelName}</span>
+                    <a style={{position:'absolute',top:15,right:0}} onClick={this.editperson.bind(this,basic.uid)}><Icon type="edit"/>编辑</a>
                 </div>
                 <div style={{marginBottom:20}}>
                     <div style={{display:'inline-block',width:'50%'}}>
@@ -360,7 +382,7 @@ export default class Talentinformation extends Component {
                         <div style={{display:'inline-block',width:'80%'}}>
                         {
                             this.state.project.map((item,key)=>{
-                                return <Experience key={key} title={item.pname} job={item.role} content={item.projectcontent} timestart={item.datastart} timeend={item.dataend}/>
+                                return <Experience key={key} title={item.pname} job={item.crole} content={item.projectcontent} timestart={item.datastart} timeend={item.dataend}/>
                             })
                         }
                         </div>
@@ -389,6 +411,9 @@ export default class Talentinformation extends Component {
                             </Button>
                         </Upload>
                     </div>
+                   
+                        <iframe src="./123.pdf" frameborder="0" width="100%" scroll="no"></iframe>
+                    
                     </TabPane>
                     <TabPane tab="面试" key="3">
                     <div  style={{textAlign:'center'}}>
@@ -517,7 +542,7 @@ export default class Talentinformation extends Component {
                     <div style={{width:'32%',display:'inline-block'}}>
                         <Select defaultValue="其他" style={{ width:'100%' }}>
                             {this.state.workAddress.map((item,key)=>{
-                              return  <Option value={item} key={key} >{item}</Option>  
+                              return  <Option value={item.uid} key={key} >{item.address}</Option>  
                             })}
                         </Select>
                     </div>
@@ -635,7 +660,7 @@ export default class Talentinformation extends Component {
             <Select style={{ width:'100%' }} onSelect={this.viewjob.bind(this)} value={this.state.selectjob}>
                 {
                     this.state.applyJobs.map((item,key)=>{
-                        return <Option value={item} key={key}>{item}</Option>                        
+                        return <Option value={item.uid} key={key}>{item.uid}</Option>                        
                     })
                 }     
             </Select>
@@ -646,7 +671,7 @@ export default class Talentinformation extends Component {
                 <Select style={{ width:'80%' }} onSelect={this.start.bind(this)} value={this.state.startStepbar}>
                 {
                     this.state.jobs.map((item,key)=>{
-                        return <Option value={item} key={key}>{item}</Option>                        
+                        return <Option value={item.uid} key={key}>{item.jobname}</Option>                        
                     })
                 }
                 </Select>
