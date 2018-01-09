@@ -99,7 +99,9 @@ export default class Company extends Component {
             dept.map((item,key)=>{
               return dept[key]['key']=key
             })
-            console.log(dept)
+            address.map((item,key)=>{
+              return address[key]['key']=key
+            })
             this.setState({
               workAddress:address,
               department:dept
@@ -152,6 +154,7 @@ export default class Company extends Component {
           target.editable = true;
           this.setState({ [name]: newData });
         }
+       
       }
       save(key,data,name) {
         const newData = [...data];
@@ -160,13 +163,47 @@ export default class Company extends Component {
           delete target.editable;
           this.setState({ [name]: newData });
           this.cacheData = newData.map(item => ({ ...item }));
+          delete target.key;
+          if(name==='workAddress'){
+            fetch('http://10.125.4.32:8080/xiaoniuzp/api/xnzp/address',{mode:'cors',method:'post',
+            headers: {'Content-Type': 'application/json;charset=UTF-8'},
+            body:JSON.stringify(target),
+            }).then(res => res.json()).then(res => {
+              alert('修改成功')
+            })
+          }          
+          if(name==='department'){
+            fetch('http://10.125.4.32:8080/xiaoniuzp/api/xnzp/dept',{mode:'cors',method:'post',
+            headers: {'Content-Type': 'application/json;charset=UTF-8'},
+            body:JSON.stringify(target),
+            }).then(res => res.json()).then(res => {
+              alert('修改成功')
+            })
+          }
+         
         }
       }
       delete(key,data,name){
         const newData = [...data];
         const target = newData.filter(item => item.key !== key);
+        const deletedata=newData.filter(item => key === item.key)[0]
         if (target) {
           delete target.editable;
+          if(name==='workAddress'){
+            fetch('http://10.125.4.32:8080/xiaoniuzp/api/xnzp/address/'+deletedata.uid,{mode:'cors',method:'delete',
+            headers: {'Content-Type': 'application/json;charset=UTF-8'},
+            }).then(res => res.json()).then(res => {
+              alert('删除成功')
+            })
+          }          
+          if(name==='department'){
+            
+            fetch('http://10.125.4.32:8080/xiaoniuzp/api/xnzp/dept/'+deletedata.uid,{mode:'cors',method:'delete',
+            headers: {'Content-Type': 'application/json;charset=UTF-8'},
+            }).then(res => res.json()).then(res => {
+              alert('删除成功')
+            })
+          }
           this.setState({ 
             [name]: target
           });
@@ -198,6 +235,42 @@ export default class Company extends Component {
         let ourcompanyindustry=this.state.ourcompanyindustry;
         let ourcompanynumber=this.state.ourcompanynumber;
         let ourcompantwebsite=this.state.ourcompantwebsite;
+      }
+      addAddress(){
+        fetch('http://10.125.4.32:8080/xiaoniuzp/api/xnzp/address',{mode:'cors',method:'post',
+            headers: {'Content-Type': 'application/json'},        
+            body:JSON.stringify({
+                city: this.city.input.value,
+                address:this.address.input.value
+              })
+            }).then(res => res.json()).then(res=>{
+                fetch('http://10.125.4.32:8080/xiaoniuzp/api/xnzp/public/getbas',{mode:'cors',method:'get'}).then(res => res.json()).then(res => {
+                     let {address} = res.body
+                     address.map((item,key)=>{
+                      return address[key]['key']=key
+                    })
+                     this.setState({workAddress:address})
+                 })
+                 this.city.input.value=''
+                 this.address.input.value=''
+            }) 
+      }
+      adddept(){
+        fetch('http://10.125.4.32:8080/xiaoniuzp/api/xnzp/dept',{mode:'cors',method:'post',
+        headers: {'Content-Type': 'application/json'},
+        body:JSON.stringify({"deptname":this.deptname.input.value}),
+        }).then(res => res.json()).then(res=>{
+            fetch('http://10.125.4.32:8080/xiaoniuzp/api/xnzp/public/getbas',{mode:'cors',method:'get'}).then(res => res.json()).then(res => {
+              let {dept,address} = res.body
+              dept.map((item,key)=>{
+                return dept[key]['key']=key
+              })
+              this.setState({
+                department:dept
+              })
+              this.deptname.input.value=''
+             })
+        })   
       }
     render(){
         return(
@@ -232,21 +305,21 @@ export default class Company extends Component {
                 <Table  pagination={false} dataSource={this.state.workAddress} columns={this.columns} />
                 <Form action="" layout="inline" style={{margin:'10px 0'}}>
                     <Form.Item>
-                    <Input placeholder="城市"/>
+                    <Input ref={(input) => { this.city = input; }} placeholder="城市"/>
                     </Form.Item>
                     <Form.Item>
-                    <Input placeholder="详细地点"/>
+                    <Input ref={(input) => { this.address = input; }} placeholder="详细地点"/>
                     </Form.Item>
-                    <Form.Item><Button type="primary" >新建工作地点</Button>
+                    <Form.Item><Button type="primary" onClick={this.addAddress.bind(this)} >新建工作地点</Button>
                     </Form.Item>
                 </Form>
                 <h3>部门</h3>
                 <Table  pagination={false} dataSource={this.state.department} columns={this.columns2} />
                 <Form action="" layout="inline" style={{margin:'10px 0'}}>
                     <Form.Item>
-                    <Input/>
+                    <Input ref={(input) => { this.deptname = input; }}/>
                     </Form.Item>
-                    <Form.Item><Button type="primary" >新建部门</Button>
+                    <Form.Item><Button type="primary" onClick={this.adddept.bind(this)} >新建部门</Button>
                     </Form.Item>
                 </Form>
                 <h3>招聘官网</h3>

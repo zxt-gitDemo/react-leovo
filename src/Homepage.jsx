@@ -41,13 +41,13 @@ class Homepage extends Component {
                     {/* 新建候选人 */}
                     <Route path="/home/talents/batchtalent" component={Batchtalent}/>
                     {/* 批量新建候选人  */}
-                    <Route path="/home/talents/information/:id" component={Talentinformation}/>
+                    <Route path="/home/talents/information" component={Talentinformation}/>
                     {/* 人才库个人信息  */}
                     <Route path="/home/candidatedetails" component={Candidatedetails}/>
                     {/* 全部候选人信息  */}
                     <Route path="/home/jobs" component={Jobdetails}/>
                     {/* 职位信息  */}
-                    <Route path="/home/talents" component={Talents}/>
+                    <Route path="/home/talents/:id?" component={Talents}/>
                     {/* 人才库信息  */}
                     <Route exact path="/home/search/:v?" component={TSearch}/>
                     {/* 搜索  */}

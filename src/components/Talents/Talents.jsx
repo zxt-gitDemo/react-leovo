@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { Layout,Icon,Select,Progress } from 'antd';
 import Screening from '../Candidate/Screening'
 import Talentsdetails from './Talentsdetails'
+import Talentinformation from '../Interview/Talentinformation'
 const {  Content, Sider } = Layout;
 const Option = Select.Option;
 export default class Talents extends Component {
@@ -13,10 +14,19 @@ export default class Talents extends Component {
             search2:{},
             slectjob:'',
             stage:'',
-            lists:[]
+            lists:[],
+            id:'',
+            detailshow:false
         }
     }
     componentDidMount(){
+        let uid=this.props.match.params.id;
+        if(uid){
+            this.setState({
+                id:uid,
+                detailshow:true
+            })
+        }
         fetch('http://10.125.4.32:8080/xiaoniuzp/api/xnzp/public/getbas',{mode:'cors',method:'get'}).then(res => res.json()).then(res => {
             let {job} = res.body
             this.setState({job:job})
@@ -32,6 +42,13 @@ export default class Talents extends Component {
         //     this.setState({lists:list})
         // })
     }
+    // shouldComponentUpdate(nextProps, nextState){
+    //     if( nextState.id===this.state.id){
+    //         return false
+    //     }
+    //     return true
+       
+    // }
     req(condition1,condition2){
         console.log(condition1)
         console.log(condition2)
@@ -66,9 +83,28 @@ export default class Talents extends Component {
             })
         })
     }
+    personclick(id){
+        this.setState({
+            detailshow:true,
+            id:id
+            
+        })
+    }
+    closemodel(){
+        this.setState({
+            
+            detailshow:false
+        })
+    }
     render() {
         return (
+            <div>
+                 <div style={{display:this.state.detailshow===false?'none':'block',width:'100%'}} >
+                    <Talentinformation uid={this.state.id} close={()=>this.closemodel()} />
+                </div>
+           
             <Layout style={{height:'520px',zIndex:5}}>
+            
             <Sider width={300}
             style={{background:'#f3f3f3',padding:20,height:'500px',overflow:'auto'}}
             >
@@ -114,9 +150,10 @@ export default class Talents extends Component {
             <Screening childsearch={(obj)=>this.childsearch(obj)}/>
             </Sider>
             <Content style={{background:'white',padding:20,height:'500px',overflow:'auto'}}>
-            <Talentsdetails lists={this.state.lists} />
+            <Talentsdetails lists={this.state.lists} personclick={(id)=>this.personclick(id)}   />
             </Content>
             </Layout>
+            </div>
         )
     }
 }

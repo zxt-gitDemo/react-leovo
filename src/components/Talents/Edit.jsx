@@ -213,7 +213,7 @@ const Option = Select.Option;
             }).then(res => res.json()).then(res => {
                 message.success("保存成功",[0.5])
                 setTimeout(()=>{
-                    this.props.history.push('/home/talents/information')
+                    this.props.history.push('/home/talents/'+res.body.uid)
                 },500)
             }).catch(()=>{
                 message.error("保存失败", [1])

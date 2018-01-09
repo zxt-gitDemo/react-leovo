@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import {Layout,Icon,Menu,Divider,Select,Tabs,Upload,Tooltip,Tag, message,Dropdown,Radio , Button,Modal,Input,DatePicker,Checkbox } from 'antd';
-import {Router, Route,Link,NavLink} from 'react-router-dom';
+import {withRouter,Router, Route,Link,NavLink} from 'react-router-dom';
 import Experience from './Experience'
 import Interviewarrange from './Interviewarrange'
 import Stepbar from './Stepbar'
@@ -35,7 +35,7 @@ const props = {
     }
   };
 
-export default class Talentinformation extends Component {
+ class Talentinformation extends Component {
     constructor(props){
         super(props)
         this.state = {
@@ -73,19 +73,6 @@ export default class Talentinformation extends Component {
         }
     }
    componentDidMount(){
-    let uid=this.props.match.params.id;
-    fetch('http://10.125.4.32:8080/xiaoniuzp/api/xnzp/abilityPerson/'+uid,{mode: 'cors',method:'get'}).then(res => res.json()).then(res => {
-        console.log(res.body)   
-    this.setState({
-            basic:res.body,
-            tags:res.body.clabels,
-            work:res.body.personworks,
-            project:res.body.personprojects,
-            edu:res.body.personeducations,
-            applyJobs:res.body.personapplyJobs
-            
-        })  
-    })
     fetch('http://10.125.4.32:8080/xiaoniuzp/api/xnzp/public/getbas',{mode:'cors',method:'get'}).then(res => res.json()).then(res => {
             let {job,address} = res.body
             this.setState({jobs:job,
@@ -100,30 +87,51 @@ export default class Talentinformation extends Component {
     })
 
    }
+   componentWillReceiveProps(nextProps){
+    let uid=nextProps.uid;
+   if(uid !== ''){
+    fetch('http://10.125.4.32:8080/xiaoniuzp/api/xnzp/abilityPerson/'+uid,{mode: 'cors',method:'get'}).then(res => res.json()).then(res => {
+       
+            this.setState({
+            basic:res.body,
+            tags:res.body.clabels,
+            work:res.body.personworks,
+            project:res.body.personprojects,
+            edu:res.body.personeducations,
+            applyJobs:res.body.personapplyJobs
+            
+        })  
+    })
+   }
+   }
       setModal1Visible(modal1Visible,id) {
         this.setState({ modal1Visible });
         this.setState({
             interviewarranges:[],
             arranges:[]
         })
-        fetch('./Interviewtime.json').then(res => res.json()).then(res => {
-            let {date,mode,list,email,iaddress} = res.data.interview[0]
-            this.setState({
-                date:date,
-                mode:mode,
-                list:list,
-                email:email,
-                iaddress:iaddress
-            },function(){
-                this.setState({interviewarranges:this.state.list},function(){
-                    let list=this.state.arranges;
-                    for( let w=0;w<this.state.interviewarranges.length;w++){
-                        list.push(<Interviewarrange key={this.state.arranges.length} list={this.state.interviewarranges[w]} index={this.state.arranges.length} del={(n)=>this.deleteinterview(n)} editinterview={(arrindex,value,type)=>this.editinterview(arrindex,value,type)} />)
-                        this.setState({arranges:list})
-                    }
-                })
-            })     
-        })
+        if(id){
+            fetch('./Interviewtime.json').then(res => res.json()).then(res => {
+                
+                // let {date,mode,list,email,iaddress} = res.data.interview[0]
+                // this.setState({
+                //     date:date,
+                //     mode:mode,
+                //     list:list,
+                //     email:email,
+                //     iaddress:iaddress
+                },function(){
+                    // this.setState({interviewarranges:this.state.list},function(){
+                    //     let list=this.state.arranges;
+                    //     for( let w=0;w<this.state.interviewarranges.length;w++){
+                    //         list.push(<Interviewarrange key={this.state.arranges.length} list={this.state.interviewarranges[w]} index={this.state.arranges.length} del={(n)=>this.deleteinterview(n)} editinterview={(arrindex,value,type)=>this.editinterview(arrindex,value,type)} />)
+                    //         this.setState({arranges:list})
+                    //     }
+                    // })
+                // })     
+            })
+        }
+       
       }
       setModal2Visible(modal2Visible,id) {
         this.setState({
@@ -153,7 +161,7 @@ export default class Talentinformation extends Component {
         fetch('http://10.125.4.32:8080/xiaoniuzp/api/xnzp/abilityPerson/saveclabel',{mode:'cors',method:'post',
             headers: {'Content-Type': 'application/json;charset=UTF-8'},
             body:JSON.stringify({
-                uid:this.props.match.params.id,
+                uid:this.props.uid,
                 clabels:tags
             }),
             }).then(res => res.json()).then(res => {
@@ -182,7 +190,7 @@ export default class Talentinformation extends Component {
         fetch('http://10.125.4.32:8080/xiaoniuzp/api/xnzp/abilityPerson/saveclabel',{mode:'cors',method:'post',
             headers: {'Content-Type': 'application/json;charset=UTF-8'},
             body:JSON.stringify({
-                uid:this.props.match.params.id,                
+                uid:this.props.uid,                
                 clabels:tags
             }),
             }).then(res => res.json()).then(res => {
@@ -205,11 +213,30 @@ export default class Talentinformation extends Component {
           })
       }
       firmjob(){
+        fetch('http://10.125.4.32:8080/xiaoniuzp/api/xnzp/personapplyJobs',{mode: 'cors',method:'post',
+            headers: {'Content-Type': 'application/json;charset=UTF-8'},
+            body:JSON.stringify({
+                huid:this.props.uid,                
+                jobuid:this.state.startStepbar
+            })
+        }).then(res => res.json()).then(res => {
+            console.log(res)
+            fetch('http://10.125.4.32:8080/xiaoniuzp/api/xnzp/abilityPerson/'+this.props.uid,{mode: 'cors',method:'get'}).then(res => res.json()).then(res => {
+                
+            this.setState({applyJobs:res.body.personapplyJobs}
+            ,function(){
+                this.setState({selectjob:this.state.startStepbar})
+                
+            })
+            })  
+      
         setTimeout(()=>{
             this.setState({
                 stepbarVisble:'block'
               })
           },800)
+        })  
+       
       }
       viewjob(value){
         this.setState({
@@ -281,7 +308,18 @@ export default class Talentinformation extends Component {
 
   }
   clicktab(key){
-      console.log(this.state.tabkey)
+      console.log(key)
+      if(key==='3'){
+        fetch('http://10.125.4.32:8080/xiaoniuzp/api/xnzp/personapplyJobs/query',{mode: 'cors',method:'post',
+            headers: {'Content-Type': 'application/json;charset=UTF-8'},
+            body:JSON.stringify({
+                huid:this.props.uid,                
+                jobuid:''
+            })
+        }).then(res => res.json()).then(res => {
+           console.log(res)
+        })
+      }
       this.setState({
         tabkey:key
       })
@@ -290,22 +328,30 @@ export default class Talentinformation extends Component {
     this.props.history.push('/home/talents/newtalent/'+uid)
 
   }
+  closemodel(){
+
+      this.props.close()
+  }
       saveInputRef = input => this.input = input
     render(){
           const { tags, inputVisible, inputValue } = this.state;
           let basic=this.state.basic
         return (
-            <Layout style={{marginLeft:300}}>
-            <Content style={{background:'white',padding:20,height:'520px'}}>
+            <Layout style={{position:'absolute',top:64,left:0,width:'100%'}}>
+            <Sider width={270} style={{background:'black',background:'rgba(0,0,0,.5)',zIndex:10}}>
+                <Icon type="close" style={{cursor:'pointer',fontSize:45,position:'absolute',top:20,right:10,zIndex:50,color:'gray',background:'white',borderRadius:'50%',opacity:1}} onClick={this.closemodel.bind(this)} />                
+            </Sider>
+            <Content style={{background:'white',padding:20,height:'520px',zIndex:10}}>
+               
                 <div style={{position:'relative'}}>
                     <h1 style={{display:'inline-block',marginRight:20}}>{basic.abilityname}</h1><span>渠道：{basic.channelName}</span>
                     <a style={{position:'absolute',top:15,right:0}} onClick={this.editperson.bind(this,basic.uid)}><Icon type="edit"/>编辑</a>
                 </div>
                 <div style={{marginBottom:20}}>
                     <div style={{display:'inline-block',width:'50%'}}>
-                        <span>{basic.job}</span>
+                        <span>{basic.personwork===null||basic.personwork===undefined?'':basic.personwork.jobname}</span>
                         <Divider type="vertical" />
-                        <span>{basic.company}</span>
+                        <span>{basic.personwork===null||basic.personwork===undefined?'':basic.personwork.cname}</span>
                     </div>
                     <div style={{display:'inline-block',width:'50%'}}>
                         <Icon type="mail"/> <span>{basic.email}</span>
@@ -660,7 +706,7 @@ export default class Talentinformation extends Component {
             <Select style={{ width:'100%' }} onSelect={this.viewjob.bind(this)} value={this.state.selectjob}>
                 {
                     this.state.applyJobs.map((item,key)=>{
-                        return <Option value={item.uid} key={key}>{item.uid}</Option>                        
+                        return <Option value={item.uid} key={key}>{item.jobname}</Option>                        
                     })
                 }     
             </Select>
@@ -688,3 +734,4 @@ export default class Talentinformation extends Component {
         )
     }
 }
+export default withRouter(Talentinformation)
